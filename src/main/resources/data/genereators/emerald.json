@@ -1,0 +1,11 @@
+[
+  {
+    "Item": "emerald",
+    "Count": 1,
+    "CooldownsByLevel": [
+      55.0,
+      40.0,
+      27.0
+    ]
+  }
+]
