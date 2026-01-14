@@ -13,7 +13,7 @@ public class SetupPhase extends Phase {
 
     @Override
     void init() {
-        for (var level: game.level.islands) {}
+//        for (var level: game.level.islands) {}
     }
 
     @Override

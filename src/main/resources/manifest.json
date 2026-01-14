@@ -1,0 +1,19 @@
+{
+  "Group": "MountHyrmur",
+  "Name": "Bedwars",
+  "Version": "1.0.0",
+  "Description": "Bedwars plugin for Hytale",
+  "Authors": [
+    {
+      "Name": "SzczurekYT",
+      "Email": "szczurek@szczurek.yt"
+    }
+  ],
+  "Website": "https://github.com/MountHyrmur/HytaleBedwars",
+  "ServerVersion": "*",
+  "Dependencies": {},
+  "OptionalDependencies": {},
+  "DisabledByDefault": false,
+  "IncludesAssetPack": false,
+  "Main": "yt.szczurek.hyrmur.bedwars.BedwarsPlugin"
+}
