@@ -1,6 +1,6 @@
 plugins {
     id("java")
-    id("app.ultradev.hytalegradle") version "1.5.0"
+    id("app.ultradev.hytalegradle") version "1.5.1"
 }
 
 group = project.property("maven_group") as String
