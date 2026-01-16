@@ -1,0 +1,7 @@
+commands.bedwars.desc = Manage the bedwars plugin
+commands.bedwars.map.desc = Manage bedwars maps
+commands.bedwars.map.create.desc = Create a bedwars map
+commands.bedwars.map.edit.desc = Edit a bedwars map
+commands.bedwars.map.delete.desc = Delete a bedwars map
+commands.bedwars.map.list.desc = List bedwars maps
+commands.bedwars.map.arg.name = The name of the map to edit

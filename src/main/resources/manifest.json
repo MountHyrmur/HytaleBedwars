@@ -6,14 +6,17 @@
   "Authors": [
     {
       "Name": "SzczurekYT",
-      "Email": "szczurek@szczurek.yt"
+      "Email": "szczurek@szczurek.yt",
+      "Url": ""
     }
   ],
   "Website": "https://github.com/MountHyrmur/HytaleBedwars",
-  "ServerVersion": "*",
+  "Main": "yt.szczurek.hyrmur.bedwars.BedwarsPlugin",
+  "ServerVersion": "",
   "Dependencies": {},
   "OptionalDependencies": {},
+  "LoadBefore": {},
   "DisabledByDefault": false,
-  "IncludesAssetPack": false,
-  "Main": "yt.szczurek.hyrmur.bedwars.BedwarsPlugin"
+  "IncludesAssetPack": true,
+  "SubPlugins": []
 }
