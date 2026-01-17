@@ -1,14 +1,20 @@
 package yt.szczurek.hyrmur.bedwars.data;
 
+import com.hypixel.hytale.server.core.inventory.ItemStack;
+
 import java.util.List;
 
 public class GeneratorDropEntry {
-    public String item = ""; //TODO: Default item
-    public int count = 1;
+    private String item = "Ingredient_Bar_Iron";
+    private int count = 1;
     public List<Float> cooldownsByLevel = List.of(1.0f);
 
     public String getItem() {
         return item;
+    }
+
+    public ItemStack getItemStack() {
+        return new ItemStack(item, count);
     }
 
     public List<Float> getCooldownsByLevel() {

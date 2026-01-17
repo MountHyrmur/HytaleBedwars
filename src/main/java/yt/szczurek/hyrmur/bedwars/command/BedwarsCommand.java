@@ -7,6 +7,7 @@ public class BedwarsCommand extends AbstractCommandCollection {
         super("bedwars", "server.commands.bedwars.desc");
         this.addAliases("bw");
         this.addSubCommand(new BedwarsMapCommand());
+        this.addSubCommand(new BedwarsDevCommand());
     }
 
     public static class BedwarsMapCommand extends AbstractCommandCollection {

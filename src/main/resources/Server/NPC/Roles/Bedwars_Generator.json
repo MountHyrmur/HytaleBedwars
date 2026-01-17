@@ -1,0 +1,15 @@
+{
+  "Type": "Generic",
+  "Appearance": "Bedwars_Generator",
+  "MotionControllerList": [
+    {
+      "Type": "Fly"
+    }
+  ],
+  "MaxHealth": 1,
+  "Invulnerable": true,
+  "Instructions": [
+    {}
+  ],
+  "NameTranslationKey": "server.npcRoles.Empty_Role.name"
+}
