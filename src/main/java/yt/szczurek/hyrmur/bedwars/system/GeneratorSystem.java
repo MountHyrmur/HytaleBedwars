@@ -3,6 +3,7 @@ package yt.szczurek.hyrmur.bedwars.system;
 import com.hypixel.hytale.component.*;
 import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.component.system.tick.EntityTickingSystem;
+import com.hypixel.hytale.math.vector.Vector3d;
 import com.hypixel.hytale.server.core.entity.ItemUtils;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
@@ -27,7 +28,7 @@ public class GeneratorSystem extends EntityTickingSystem<EntityStore> {
                 // Cooldown has passed
                 GeneratorDropEntry drop = generator.getDrops().get(entry.getKey());
                 ItemStack item = drop.getItemStack();
-                ItemUtils.dropItem(ref, item, commandBuffer);
+                ItemUtils.throwItem(ref, commandBuffer, item, Vector3d.ZERO,0.0f);
                 entry.setValue(drop.getCooldown(generator.getLevel()));
             } else {
                 long elapsed = (long) (dt * 1000.0);
