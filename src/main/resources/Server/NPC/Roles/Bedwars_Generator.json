@@ -9,7 +9,18 @@
   "MaxHealth": 1,
   "Invulnerable": true,
   "Instructions": [
-    {}
+    {
+      "Instructions": [
+        {
+          "Sensor": {
+            "Type": "Any"
+          },
+          "BodyMotion": {
+            "Type": "Nothing"
+          }
+        }
+      ]
+    }
   ],
-  "NameTranslationKey": "server.npcRoles.Empty_Role.name"
+  "NameTranslationKey": "server.npcRoles.Bedwars_Generator.name"
 }
