@@ -36,10 +36,10 @@ public class BedwarsDevCommand extends AbstractPlayerCommand {
             BedwarsGenerator config = BedwarsGenerator.getAssetMap().getAsset("Forge_Fours_Preset1");
             assert config != null;
             Generator generator = new Generator(config);
-            store.addComponent(entity, BedwarsPlugin.get().getBedwarsGeneratorComponentType(), generator);
+            store.addComponent(entity, BedwarsPlugin.get().getGeneratorComponentType(), generator);
             player.sendMessage(Message.raw("Added generator component!"));
         } else {
-            store.removeComponent(entity, BedwarsPlugin.get().getBedwarsGeneratorComponentType());
+            store.removeComponent(entity, BedwarsPlugin.get().getGeneratorComponentType());
             player.sendMessage(Message.raw("Removed generator component!"));
         }
 

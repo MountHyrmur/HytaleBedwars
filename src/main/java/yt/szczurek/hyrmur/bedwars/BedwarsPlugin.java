@@ -11,6 +11,7 @@ import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import org.jetbrains.annotations.NotNull;
 import yt.szczurek.hyrmur.bedwars.command.BedwarsCommand;
+import yt.szczurek.hyrmur.bedwars.component.data.GeneratorBuilder;
 import yt.szczurek.hyrmur.bedwars.component.running.Generator;
 import yt.szczurek.hyrmur.bedwars.data.BedwarsGenerator;
 import yt.szczurek.hyrmur.bedwars.system.GeneratorSystem;
@@ -20,7 +21,8 @@ public class BedwarsPlugin extends JavaPlugin {
     public static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
     private static BedwarsPlugin instance;
 
-    private ComponentType<EntityStore, Generator> bedwarsGeneratorComponent;
+    private ComponentType<EntityStore, Generator> generatorComponent;
+    private ComponentType<EntityStore, GeneratorBuilder> generatorBuilderComponent;
 
     public BedwarsPlugin(@NotNull JavaPluginInit init) {
         super(init);
@@ -45,14 +47,22 @@ public class BedwarsPlugin extends JavaPlugin {
                         .build()
         );
 
-        this.bedwarsGeneratorComponent = this.getEntityStoreRegistry().registerComponent(Generator.class, () -> {
+        this.generatorComponent = this.getEntityStoreRegistry().registerComponent(Generator.class, () -> {
             throw new UnsupportedOperationException("Generator must be created directly");
+        });
+
+        this.generatorBuilderComponent = this.getEntityStoreRegistry().registerComponent(GeneratorBuilder.class, () -> {
+            throw new UnsupportedOperationException("GeneratorBuilder must be created directly");
         });
 
         this.getEntityStoreRegistry().registerSystem(new GeneratorSystem());
     }
 
-    public ComponentType<EntityStore, Generator> getBedwarsGeneratorComponentType() {
-        return bedwarsGeneratorComponent;
+    public ComponentType<EntityStore, Generator> getGeneratorComponentType() {
+        return generatorComponent;
+    }
+
+    public ComponentType<EntityStore, GeneratorBuilder> getGeneratorBuilderComponent() {
+        return generatorBuilderComponent;
     }
 }
