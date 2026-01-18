@@ -11,12 +11,10 @@ import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.util.TargetUtil;
 import yt.szczurek.hyrmur.bedwars.BedwarsPlugin;
-import yt.szczurek.hyrmur.bedwars.component.running.BedwarsGenerator;
-import yt.szczurek.hyrmur.bedwars.data.GeneratorConfig;
-import yt.szczurek.hyrmur.bedwars.data.GeneratorDropEntry;
+import yt.szczurek.hyrmur.bedwars.component.running.Generator;
+import yt.szczurek.hyrmur.bedwars.data.BedwarsGenerator;
 
 import javax.annotation.Nonnull;
-import java.util.List;
 
 public class BedwarsDevCommand extends AbstractPlayerCommand {
     public BedwarsDevCommand() {
@@ -33,12 +31,11 @@ public class BedwarsDevCommand extends AbstractPlayerCommand {
             entity = ref;
         }
 
-        BedwarsGenerator oldGenerator = store.getComponent(entity, BedwarsGenerator.getComponentType());
+        Generator oldGenerator = store.getComponent(entity, Generator.getComponentType());
         if (oldGenerator == null) {
-            GeneratorConfig config = new GeneratorConfig();
-            config.id = "Test";
-            config.drops = List.of(new GeneratorDropEntry());
-            BedwarsGenerator generator = new BedwarsGenerator(config);
+            BedwarsGenerator config = BedwarsGenerator.getAssetMap().getAsset("Forge_Fours_Preset1");
+            assert config != null;
+            Generator generator = new Generator(config);
             store.addComponent(entity, BedwarsPlugin.get().getBedwarsGeneratorComponentType(), generator);
             player.sendMessage(Message.raw("Added generator component!"));
         } else {

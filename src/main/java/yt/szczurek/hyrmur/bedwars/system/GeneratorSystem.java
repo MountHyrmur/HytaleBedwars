@@ -7,19 +7,19 @@ import com.hypixel.hytale.math.vector.Vector3d;
 import com.hypixel.hytale.server.core.entity.ItemUtils;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import yt.szczurek.hyrmur.bedwars.component.running.BedwarsGenerator;
+import yt.szczurek.hyrmur.bedwars.component.running.Generator;
 import yt.szczurek.hyrmur.bedwars.data.GeneratorDropEntry;
 
 import javax.annotation.Nonnull;
 
 public class GeneratorSystem extends EntityTickingSystem<EntityStore> {
-    private final ComponentType<EntityStore, BedwarsGenerator> generatorComponentType = BedwarsGenerator.getComponentType();
+    private final ComponentType<EntityStore, Generator> generatorComponentType = Generator.getComponentType();
 
     @Override
     public void tick(float dt, int index, @Nonnull ArchetypeChunk<EntityStore> archetypeChunk,
                      @Nonnull Store<EntityStore> store, @Nonnull CommandBuffer<EntityStore> commandBuffer) {
 
-        BedwarsGenerator generator = archetypeChunk.getComponent(index, generatorComponentType);
+        Generator generator = archetypeChunk.getComponent(index, generatorComponentType);
         assert generator != null;
         Ref<EntityStore> ref = archetypeChunk.getReferenceTo(index);
 

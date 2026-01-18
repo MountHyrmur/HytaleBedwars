@@ -1,0 +1,17 @@
+{
+  "Drops": [
+    {
+      "Item": "Ingredient_Bar_Iron",
+      "CooldownsByLevel": [
+        3.08
+      ],
+      "Count": 5
+    },
+    {
+      "Item": "Ingredient_Bar_Gold",
+      "CooldownsByLevel": [
+        7.64
+      ]
+    }
+  ]
+}

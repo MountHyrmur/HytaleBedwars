@@ -1,0 +1,13 @@
+{
+  "Drops": [
+    {
+      "Item": "Rock_Gem_Diamond",
+      "Count": 1,
+      "CooldownsByLevel": [
+        30.0,
+        23.0,
+        12.0
+      ]
+    }
+  ]
+}
