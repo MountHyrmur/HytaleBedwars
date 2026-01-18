@@ -5,4 +5,6 @@ commands.bedwars.map.edit.desc = Edit a bedwars map
 commands.bedwars.map.delete.desc = Delete a bedwars map
 commands.bedwars.map.list.desc = List bedwars maps
 commands.bedwars.map.arg.name = The name of the map to edit
+commands.bedwars.spawn.desc = Spawn shopkeepers and generators
+commands.bedwars.spawn.generator.desc = Spawn item generator
 npcRoles.Bedwars_Generator.name = Bedwars Generator

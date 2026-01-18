@@ -7,6 +7,7 @@ public class BedwarsCommand extends AbstractCommandCollection {
         super("bedwars", "server.commands.bedwars.desc");
         this.addAliases("bw");
         this.addSubCommand(new BedwarsMapCommand());
+        this.addSubCommand(new BedwarsSpawnCommand());
         this.addSubCommand(new BedwarsDevCommand());
     }
 
@@ -17,6 +18,13 @@ public class BedwarsCommand extends AbstractCommandCollection {
             this.addSubCommand(new BedwarsMapEditCommand());
             this.addSubCommand(new BedwarsMapDeleteCommand());
             this.addSubCommand(new BedwarsMapListCommand());
+        }
+    }
+
+    public static class BedwarsSpawnCommand extends AbstractCommandCollection {
+        public BedwarsSpawnCommand() {
+            super("spawn", "server.commands.bedwars.spawn.desc");
+            this.addSubCommand(new BedwarsSpawnGeneratorCommand());
         }
     }
 }
