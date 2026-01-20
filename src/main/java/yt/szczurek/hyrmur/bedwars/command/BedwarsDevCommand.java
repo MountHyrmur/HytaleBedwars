@@ -2,6 +2,7 @@ package yt.szczurek.hyrmur.bedwars.command;
 
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
+import com.hypixel.hytale.protocol.packets.interface_.CustomPageLifetime;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.command.system.basecommands.AbstractPlayerCommand;
@@ -13,6 +14,7 @@ import com.hypixel.hytale.server.core.util.TargetUtil;
 import yt.szczurek.hyrmur.bedwars.BedwarsPlugin;
 import yt.szczurek.hyrmur.bedwars.component.running.Generator;
 import yt.szczurek.hyrmur.bedwars.data.BedwarsGenerator;
+import yt.szczurek.hyrmur.bedwars.ui.GeneratorEditorGui;
 
 import javax.annotation.Nonnull;
 
@@ -26,22 +28,6 @@ public class BedwarsDevCommand extends AbstractPlayerCommand {
         Player player = store.getComponent(ref, Player.getComponentType());
         assert player != null;
 
-        Ref<EntityStore> entity = TargetUtil.getTargetEntity(ref, 5.0f, store);
-        if (entity == null) {
-            entity = ref;
-        }
-
-        Generator oldGenerator = store.getComponent(entity, Generator.getComponentType());
-        if (oldGenerator == null) {
-            BedwarsGenerator config = BedwarsGenerator.getAssetMap().getAsset("Forge_Fours_Preset1");
-            assert config != null;
-            Generator generator = new Generator(config);
-            store.addComponent(entity, BedwarsPlugin.get().getGeneratorComponentType(), generator);
-            player.sendMessage(Message.raw("Added generator component!"));
-        } else {
-            store.removeComponent(entity, BedwarsPlugin.get().getGeneratorComponentType());
-            player.sendMessage(Message.raw("Removed generator component!"));
-        }
-
+        player.sendMessage(Message.raw("Nothing to see here!"));
     }
 }

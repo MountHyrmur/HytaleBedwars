@@ -8,6 +8,9 @@ import com.hypixel.hytale.component.ComponentType;
 import com.hypixel.hytale.component.Holder;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.math.vector.Vector3d;
+import com.hypixel.hytale.protocol.InteractionType;
+import com.hypixel.hytale.server.core.modules.entity.component.Interactable;
+import com.hypixel.hytale.server.core.modules.interaction.Interactions;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import org.jetbrains.annotations.Nullable;
 import yt.szczurek.hyrmur.bedwars.BedwarsPlugin;
@@ -17,13 +20,13 @@ import javax.annotation.Nonnull;
 
 public class GeneratorBuilder implements Component<EntityStore> {
     private static final BuilderCodec<GeneratorBuilder> CODEC = BuilderCodec.builder(GeneratorBuilder.class, GeneratorBuilder::new)
-            .append(new KeyedCodec<>("customField", Codec.STRING),
-                    (data, value) -> data.generatorId = value,
-                    data -> data.generatorId)
+            .append(new KeyedCodec<>("GeneratorName", Codec.STRING),
+                    (data, value) -> data.generatorName = value,
+                    data -> data.generatorName)
             .add()
             .build();
 
-    String generatorId = "";
+    String generatorName = "";
 
     @Nonnull
     public static ComponentType<EntityStore, GeneratorBuilder> getComponentType() {
@@ -34,25 +37,29 @@ public class GeneratorBuilder implements Component<EntityStore> {
     public static Holder<EntityStore> createGeneratorBuilderEntity(@Nonnull Vector3d pos, @Nonnull Store<EntityStore> store) {
         Holder<EntityStore> holder = EntityUtil.createUtilityEntity(pos, "Bedwars_Generator", store);
         holder.addComponent(getComponentType(), new GeneratorBuilder());
+        holder.ensureComponent(Interactable.getComponentType());
+        Interactions interactions = new Interactions();
+        interactions.setInteractionId(InteractionType.Use, "OpenGeneratorEditor");
+        holder.addComponent(Interactions.getComponentType(), interactions);
         return holder;
     }
 
     public GeneratorBuilder() {}
 
-    public GeneratorBuilder(String generatorId) {
-        this.generatorId = generatorId;
+    public GeneratorBuilder(String generatorName) {
+        this.generatorName = generatorName;
     }
 
-    public String getGeneratorId() {
-        return generatorId;
+    public String getGeneratorName() {
+        return generatorName;
     }
 
-    public void setGeneratorId(String generatorId) {
-        this.generatorId = generatorId;
+    public void setGeneratorName(String generatorName) {
+        this.generatorName = generatorName;
     }
 
     @Override
     public @Nullable Component<EntityStore> clone() {
-        return new GeneratorBuilder(this.generatorId);
+        return new GeneratorBuilder(this.generatorName);
     }
 }

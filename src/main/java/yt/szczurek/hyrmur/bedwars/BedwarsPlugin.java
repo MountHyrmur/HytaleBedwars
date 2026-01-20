@@ -6,6 +6,7 @@ import com.hypixel.hytale.component.ComponentType;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.asset.HytaleAssetStore;
 import com.hypixel.hytale.server.core.asset.type.item.config.Item;
+import com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
@@ -14,6 +15,7 @@ import yt.szczurek.hyrmur.bedwars.command.BedwarsCommand;
 import yt.szczurek.hyrmur.bedwars.component.data.GeneratorBuilder;
 import yt.szczurek.hyrmur.bedwars.component.running.Generator;
 import yt.szczurek.hyrmur.bedwars.data.BedwarsGenerator;
+import yt.szczurek.hyrmur.bedwars.interaction.EditGeneratorInteraction;
 import yt.szczurek.hyrmur.bedwars.system.GeneratorSystem;
 
 public class BedwarsPlugin extends JavaPlugin {
@@ -56,6 +58,9 @@ public class BedwarsPlugin extends JavaPlugin {
         });
 
         this.getEntityStoreRegistry().registerSystem(new GeneratorSystem());
+
+        this.getCodecRegistry(Interaction.CODEC).register("OpenGeneratorEditor", EditGeneratorInteraction.class, EditGeneratorInteraction.CODEC);
+
     }
 
     public ComponentType<EntityStore, Generator> getGeneratorComponentType() {
