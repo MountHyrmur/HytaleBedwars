@@ -8,6 +8,9 @@ import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.protocol.InteractionState;
 import com.hypixel.hytale.protocol.InteractionType;
 import com.hypixel.hytale.protocol.packets.interface_.CustomPageLifetime;
+import com.hypixel.hytale.server.core.Message;
+import com.hypixel.hytale.server.core.asset.type.gamemode.GameModeType;
+import com.hypixel.hytale.server.core.command.system.AbstractCommand;
 import com.hypixel.hytale.server.core.entity.InteractionContext;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.entity.nameplate.Nameplate;
@@ -45,8 +48,16 @@ public class EditGeneratorInteraction extends SimpleInstantInteraction {
             ctx.getState().state = InteractionState.Failed;
             return;
         }
-        PlayerRef playerRef= commandBuffer.getComponent(player, PlayerRef.getComponentType());
-        assert  playerRef != null;
+        PlayerRef playerRef = commandBuffer.getComponent(player, PlayerRef.getComponentType());
+        assert playerRef != null;
+        if (!playerComponent.hasPermission("Creative")) {
+            ctx.getState().state = InteractionState.Failed;
+            playerRef.sendMessage(Message.translation(
+                    "server.commands.parsing.error.noPermissionForCommand"
+            ));
+            return;
+        }
+
 
         GeneratorEditorGui gui = new GeneratorEditorGui(playerRef, generator, CustomPageLifetime.CanDismissOrCloseThroughInteraction);
         playerComponent.getPageManager().openCustomPage(player, player.getStore(), gui);
