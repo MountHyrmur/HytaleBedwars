@@ -5,6 +5,7 @@ import com.hypixel.hytale.component.ComponentType;
 import com.hypixel.hytale.component.Holder;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.math.vector.Vector3d;
+import com.hypixel.hytale.server.core.modules.entity.component.Intangible;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import org.jetbrains.annotations.NotNull;
 import yt.szczurek.hyrmur.bedwars.BedwarsPlugin;
@@ -33,6 +34,7 @@ public class Generator implements Component<EntityStore> {
     public static Holder<EntityStore> createGeneratorEntity(@Nonnull Vector3d pos, @Nonnull BedwarsGenerator config, @Nonnull Store<EntityStore> store) {
         Holder<EntityStore> holder = EntityUtil.createUtilityEntity(pos, "Bedwars_Generator", store);
         holder.addComponent(getComponentType(), new Generator(config));
+        holder.ensureComponent(Intangible.getComponentType());
         return holder;
     }
 

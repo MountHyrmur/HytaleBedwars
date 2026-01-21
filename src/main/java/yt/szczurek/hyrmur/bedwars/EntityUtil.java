@@ -9,7 +9,6 @@ import com.hypixel.hytale.server.core.asset.type.model.config.Model;
 import com.hypixel.hytale.server.core.asset.type.model.config.ModelAsset;
 import com.hypixel.hytale.server.core.entity.UUIDComponent;
 import com.hypixel.hytale.server.core.modules.entity.component.BoundingBox;
-import com.hypixel.hytale.server.core.modules.entity.component.Intangible;
 import com.hypixel.hytale.server.core.modules.entity.component.ModelComponent;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.entity.tracker.NetworkId;
@@ -33,7 +32,6 @@ public class EntityUtil {
         holder.addComponent(BoundingBox.getComponentType(), new BoundingBox(boundingBox));
         holder.addComponent(NetworkId.getComponentType(), new NetworkId(store.getExternalData().takeNextNetworkId()));
         holder.ensureComponent(UUIDComponent.getComponentType());
-        holder.ensureComponent(Intangible.getComponentType());
         return holder;
     }
 }
