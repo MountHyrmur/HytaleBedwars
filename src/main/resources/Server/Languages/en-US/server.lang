@@ -8,3 +8,6 @@ commands.bedwars.map.arg.name = The name of the map to edit
 commands.bedwars.spawn.desc = Spawn shopkeepers and generators
 commands.bedwars.spawn.generator.desc = Spawn item generator
 customUI.generatorEditor.generatorName = Generator name
+customUI.generatorEditor.button.activateGenerator = Activate
+customUI.generatorEditor.button.deactivateGenerator = Deactivate
+customUI.generatorEditor.error.invalidGeneratorName = This is not a valid generator name

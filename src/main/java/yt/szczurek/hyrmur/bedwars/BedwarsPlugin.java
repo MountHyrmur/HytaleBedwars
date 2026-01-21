@@ -17,6 +17,7 @@ import yt.szczurek.hyrmur.bedwars.component.running.Generator;
 import yt.szczurek.hyrmur.bedwars.data.BedwarsGenerator;
 import yt.szczurek.hyrmur.bedwars.interaction.EditGeneratorInteraction;
 import yt.szczurek.hyrmur.bedwars.system.GeneratorSystem;
+import yt.szczurek.hyrmur.bedwars.system.UpdateGeneratorFromBuilderSystem;
 
 public class BedwarsPlugin extends JavaPlugin {
 
@@ -53,10 +54,9 @@ public class BedwarsPlugin extends JavaPlugin {
             throw new UnsupportedOperationException("Generator must be created directly");
         });
 
-        this.generatorBuilderComponent = this.getEntityStoreRegistry().registerComponent(GeneratorBuilder.class, () -> {
-            throw new UnsupportedOperationException("GeneratorBuilder must be created directly");
-        });
+        this.generatorBuilderComponent = this.getEntityStoreRegistry().registerComponent(GeneratorBuilder.class, "GeneratorBuilder", GeneratorBuilder.CODEC);
 
+        this.getEntityStoreRegistry().registerSystem(new UpdateGeneratorFromBuilderSystem());
         this.getEntityStoreRegistry().registerSystem(new GeneratorSystem());
 
         this.getCodecRegistry(Interaction.CODEC).register("OpenGeneratorEditor", EditGeneratorInteraction.class, EditGeneratorInteraction.CODEC);

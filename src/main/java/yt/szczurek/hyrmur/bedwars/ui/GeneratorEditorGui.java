@@ -7,14 +7,16 @@ import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.protocol.packets.interface_.CustomPageLifetime;
 import com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType;
+import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.entity.entities.player.pages.InteractiveCustomUIPage;
 import com.hypixel.hytale.server.core.ui.builder.EventData;
 import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder;
 import com.hypixel.hytale.server.core.ui.builder.UIEventBuilder;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import org.jetbrains.annotations.NotNull;
 import yt.szczurek.hyrmur.bedwars.component.data.GeneratorBuilder;
+import yt.szczurek.hyrmur.bedwars.component.running.Generator;
+import yt.szczurek.hyrmur.bedwars.data.BedwarsGenerator;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -34,9 +36,12 @@ public class GeneratorEditorGui extends InteractiveCustomUIPage<GeneratorEditorG
         public static final BuilderCodec<BindingData> CODEC = BuilderCodec.builder(BindingData.class, BindingData::new)
                 .append(new KeyedCodec<>("@GeneratorName", Codec.STRING), (data, s) -> data.generatorName = s, data -> data.generatorName)
                 .add()
+                .append(new KeyedCodec<>("Action", Codec.STRING), (data, s) -> data.action = s, data -> data.action)
+                .add()
                 .build();
 
         public String generatorName;
+        public String action;
     }
 
     @Override
@@ -45,26 +50,68 @@ public class GeneratorEditorGui extends InteractiveCustomUIPage<GeneratorEditorG
 
         uiEventBuilder.addEventBinding(CustomUIEventBindingType.ValueChanged, "#GeneratorName", EventData.of("@GeneratorName", "#GeneratorName.Value"), false);
 
-        GeneratorBuilder generatorBuilder = store.getComponent(this.generator, GeneratorBuilder.getComponentType());
+        GeneratorBuilder generatorBuilder = store.getComponent(generator, GeneratorBuilder.getComponentType());
         assert generatorBuilder != null;
-        uiCommandBuilder.set("#GeneratorName.Value", generatorBuilder.getGeneratorName());
+        generatorName = generatorBuilder.getGeneratorName();
+        uiCommandBuilder.set("#GeneratorName.Value", generatorName);
+
+        uiEventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#ActivateGenerator", new EventData().append("Action", "ActivateGenerator"), false);
+        uiEventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#DeactivateGenerator", new EventData().append("Action", "DeactivateGenerator"), false);
     }
 
     @Override
     public void handleDataEvent(@Nonnull Ref<EntityStore> ref, @Nonnull Store<EntityStore> store, @Nonnull BindingData data) {
         super.handleDataEvent(ref, store, data);
 
-        this.generatorName = data.generatorName;
+        if (data.generatorName != null) {
+            String newName = data.generatorName.trim();
+            if (!newName.equals(generatorName)) {
+                generatorName = newName;
+                onGeneratorNameChange(store);
+            }
+        }
+
+        if (data.action != null) {
+            handleAction(data.action, store);
+        }
     }
 
-    @Override
-    public void onDismiss(@NotNull Ref<EntityStore> ref, @NotNull Store<EntityStore> store) {
-        super.onDismiss(ref, store);
-
-        GeneratorBuilder generatorBuilder = store.getComponent(this.generator, GeneratorBuilder.getComponentType());
-        assert generatorBuilder != null;
-        if (generatorName != null && !generatorBuilder.getGeneratorName().equals(generatorName)) {
-            generatorBuilder.setGeneratorName(generatorName);
+    private void onGeneratorNameChange(@Nonnull Store<EntityStore> store) {
+        BedwarsGenerator config = getGeneratorConfig();
+        if (config == null) {
+            // Invalid name
+            return;
         }
+        store.putComponent(generator, GeneratorBuilder.getComponentType(), new GeneratorBuilder(generatorName));
+    }
+
+    private void handleAction(@Nonnull String action, @Nonnull Store<EntityStore> store) {
+        switch (action) {
+            case "ActivateGenerator":
+                Generator component = store.getComponent(generator, Generator.getComponentType());
+                if (component != null) {
+                    break;
+                }
+
+                BedwarsGenerator config = getGeneratorConfig();
+                if (config == null) {
+                    playerRef.sendMessage(Message.translation("server.customUI.generatorEditor.error.invalidGeneratorName"));
+                    break;
+                }
+
+                store.addComponent(generator, Generator.getComponentType(), new Generator(config));
+
+                break;
+            case "DeactivateGenerator":
+                store.removeComponentIfExists(generator, Generator.getComponentType());
+                break;
+            default:
+                return;
+        }
+        close();
+    }
+
+    private @Nullable BedwarsGenerator getGeneratorConfig() {
+        return BedwarsGenerator.getAssetMap().getAsset(generatorName);
     }
 }

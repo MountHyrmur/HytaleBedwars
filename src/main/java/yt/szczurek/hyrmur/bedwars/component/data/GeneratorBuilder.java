@@ -19,7 +19,7 @@ import yt.szczurek.hyrmur.bedwars.EntityUtil;
 import javax.annotation.Nonnull;
 
 public class GeneratorBuilder implements Component<EntityStore> {
-    private static final BuilderCodec<GeneratorBuilder> CODEC = BuilderCodec.builder(GeneratorBuilder.class, GeneratorBuilder::new)
+    public static final BuilderCodec<GeneratorBuilder> CODEC = BuilderCodec.builder(GeneratorBuilder.class, GeneratorBuilder::new)
             .append(new KeyedCodec<>("GeneratorName", Codec.STRING),
                     (data, value) -> data.generatorName = value,
                     data -> data.generatorName)
@@ -52,10 +52,6 @@ public class GeneratorBuilder implements Component<EntityStore> {
 
     public String getGeneratorName() {
         return generatorName;
-    }
-
-    public void setGeneratorName(String generatorName) {
-        this.generatorName = generatorName;
     }
 
     @Override
