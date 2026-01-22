@@ -104,7 +104,7 @@ public class GeneratorEditorGui extends InteractiveCustomUIPage<GeneratorEditorG
                 break;
             case "DeactivateGenerator":
                 store.removeComponentIfExists(generator, Generator.getComponentType());
-                break;
+                return;
             default:
                 return;
         }
