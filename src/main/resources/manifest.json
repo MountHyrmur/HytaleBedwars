@@ -1,22 +1,29 @@
 {
-  "Group": "MountHyrmur",
-  "Name": "Bedwars",
-  "Version": "1.0.0",
-  "Description": "Bedwars plugin for Hytale",
-  "Authors": [
-    {
-      "Name": "SzczurekYT",
-      "Email": "szczurek@szczurek.yt",
-      "Url": ""
-    }
-  ],
-  "Website": "https://github.com/MountHyrmur/HytaleBedwars",
-  "Main": "yt.szczurek.hyrmur.bedwars.BedwarsPlugin",
-  "ServerVersion": "",
-  "Dependencies": {},
-  "OptionalDependencies": {},
-  "LoadBefore": {},
-  "DisabledByDefault": false,
-  "IncludesAssetPack": true,
-  "SubPlugins": []
+    "Group": "MountHyrmur",
+    "Name": "Bedwars",
+    "Version": "0.0.1",
+    "Description": "Bedwars plugin for Hytale",
+    "Authors": [
+        {
+            "Name": "SzczurekYT",
+            "Website": "https://github.com/SzczurekYT/"
+        }
+    ],
+    "Website": "https://github.com/MountHyrmur/HytaleBedwars",
+    "Main": "yt.szczurek.hyrmur.bedwars.BedwarsPlugin",
+    "ServerVersion": "",
+    "Dependencies": {
+        
+    },
+    "OptionalDependencies": {
+        
+    },
+    "LoadBefore": {
+        
+    },
+    "DisabledByDefault": false,
+    "IncludesAssetPack": true,
+    "SubPlugins": [
+        
+    ]
 }

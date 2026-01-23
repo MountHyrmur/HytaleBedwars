@@ -1,6 +1,6 @@
 plugins {
     id("java")
-    id("app.ultradev.hytalegradle") version "1.5.1"
+    id("app.ultradev.hytalegradle") version "2.0.0"
 }
 
 group = project.property("maven_group") as String
@@ -17,4 +17,9 @@ dependencies {
 hytale {
     allowOp.set(true)
     patchline.set(project.property("patchline") as String)
+
+    manifest {
+        version.set(project.version.toString())
+        author("SzczurekYT", url = "https://github.com/SzczurekYT/")
+    }
 }
