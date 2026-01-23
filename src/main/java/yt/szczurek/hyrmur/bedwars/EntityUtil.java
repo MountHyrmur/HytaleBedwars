@@ -8,10 +8,9 @@ import com.hypixel.hytale.math.vector.Vector3f;
 import com.hypixel.hytale.server.core.asset.type.model.config.Model;
 import com.hypixel.hytale.server.core.asset.type.model.config.ModelAsset;
 import com.hypixel.hytale.server.core.entity.UUIDComponent;
-import com.hypixel.hytale.server.core.modules.entity.component.BoundingBox;
-import com.hypixel.hytale.server.core.modules.entity.component.ModelComponent;
-import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
+import com.hypixel.hytale.server.core.modules.entity.component.*;
 import com.hypixel.hytale.server.core.modules.entity.tracker.NetworkId;
+import com.hypixel.hytale.server.core.prefab.PrefabCopyableComponent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
 import javax.annotation.Nonnull;
@@ -27,11 +26,14 @@ public class EntityUtil {
 
         holder.addComponent(TransformComponent.getComponentType(), new TransformComponent(pos, Vector3f.ZERO));
         holder.addComponent(ModelComponent.getComponentType(), new ModelComponent(model));
+        holder.addComponent(PersistentModel.getComponentType(), new PersistentModel(model.toReference()));
+
         Box boundingBox = model.getBoundingBox();
         assert boundingBox != null;
         holder.addComponent(BoundingBox.getComponentType(), new BoundingBox(boundingBox));
         holder.addComponent(NetworkId.getComponentType(), new NetworkId(store.getExternalData().takeNextNetworkId()));
         holder.ensureComponent(UUIDComponent.getComponentType());
+        holder.ensureComponent(PrefabCopyableComponent.getComponentType());
         return holder;
     }
 }

@@ -2,6 +2,7 @@ package yt.szczurek.hyrmur.bedwars;
 
 import com.hypixel.hytale.assetstore.AssetRegistry;
 import com.hypixel.hytale.assetstore.map.DefaultAssetMap;
+import com.hypixel.hytale.component.ComponentRegistryProxy;
 import com.hypixel.hytale.component.ComponentType;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.asset.HytaleAssetStore;
@@ -16,6 +17,7 @@ import yt.szczurek.hyrmur.bedwars.component.data.GeneratorBuilder;
 import yt.szczurek.hyrmur.bedwars.component.running.Generator;
 import yt.szczurek.hyrmur.bedwars.data.BedwarsGenerator;
 import yt.szczurek.hyrmur.bedwars.interaction.EditGeneratorInteraction;
+import yt.szczurek.hyrmur.bedwars.system.AddNetworkIdToGeneratorSystem;
 import yt.szczurek.hyrmur.bedwars.system.GeneratorSystem;
 import yt.szczurek.hyrmur.bedwars.system.UpdateGeneratorFromBuilderSystem;
 
@@ -50,14 +52,16 @@ public class BedwarsPlugin extends JavaPlugin {
                         .build()
         );
 
-        this.generatorComponent = this.getEntityStoreRegistry().registerComponent(Generator.class, () -> {
+        ComponentRegistryProxy<EntityStore> entityStoreRegistry = this.getEntityStoreRegistry();
+        this.generatorComponent = entityStoreRegistry.registerComponent(Generator.class, () -> {
             throw new UnsupportedOperationException("Generator must be created directly");
         });
 
-        this.generatorBuilderComponent = this.getEntityStoreRegistry().registerComponent(GeneratorBuilder.class, "GeneratorBuilder", GeneratorBuilder.CODEC);
+        this.generatorBuilderComponent = entityStoreRegistry.registerComponent(GeneratorBuilder.class, "GeneratorBuilder", GeneratorBuilder.CODEC);
 
-        this.getEntityStoreRegistry().registerSystem(new UpdateGeneratorFromBuilderSystem());
-        this.getEntityStoreRegistry().registerSystem(new GeneratorSystem());
+        entityStoreRegistry.registerSystem(new UpdateGeneratorFromBuilderSystem());
+        entityStoreRegistry.registerSystem(new GeneratorSystem());
+        entityStoreRegistry.registerSystem(new AddNetworkIdToGeneratorSystem());
 
         this.getCodecRegistry(Interaction.CODEC).register("OpenGeneratorEditor", EditGeneratorInteraction.class, EditGeneratorInteraction.CODEC);
 
