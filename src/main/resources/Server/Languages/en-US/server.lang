@@ -1,9 +1,12 @@
 commands.bedwars.desc = Manage the bedwars plugin
 commands.bedwars.map.desc = Manage bedwars maps
 commands.bedwars.map.create.desc = Create a bedwars map
-commands.bedwars.map.create.createStart = Creating map {name}
-commands.bedwars.map.create.createEnd = Created, sending you to {name}
+commands.bedwars.map.create.alreadyExists = Map {name} already exists
+commands.bedwars.map.create.created = Created map {name}
+commands.bedwars.map.common.loadStart = Loading map {name}
+commands.bedwars.map.common.loadEnd = Loaded map {name}
 commands.bedwars.map.edit.desc = Edit a bedwars map
+commands.bedwars.map.edit.notExist = Map {name} does not exist
 commands.bedwars.map.delete.desc = Delete a bedwars map
 commands.bedwars.map.list.desc = List bedwars maps
 commands.bedwars.map.arg.name = The name of the map to edit
