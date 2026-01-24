@@ -23,7 +23,7 @@ class BedwarsMapCreateCommand : BedwarsMapActionCommand("create") {
         ctx.sendMessage(MESSAGE_CREATED.param("name", mapName!!))
         BedwarsMapEditCommand.loadForEdit(mapName, playerRef).thenAccept { mapWorld ->
             mapWorld.execute { initializeWorld(mapWorld) }
-            BedwarsMapManager.teleportPlayerToWorld(playerRef, world, mapWorld, store)
+            BedwarsMapManager.teleportPlayerToWorld(ref, mapWorld, store)
         }
     }
 

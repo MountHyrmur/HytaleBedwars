@@ -7,5 +7,5 @@ import com.hypixel.hytale.server.core.command.system.basecommands.AbstractPlayer
 abstract class BedwarsMapActionCommand(literal: String) :
     AbstractPlayerCommand(literal, "server.commands.bedwars.map.$literal.desc", false) {
     protected val mapNameArg: RequiredArg<String> =
-        this.withRequiredArg("mapName", "server.commands.bedwars.edit.arg.name", ArgTypes.STRING)
+        this.withRequiredArg("mapName", "server.commands.bedwars.map.arg.name", ArgTypes.STRING)
 }

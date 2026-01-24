@@ -22,7 +22,7 @@ class BedwarsMapEditCommand : BedwarsMapActionCommand("edit") {
         }
         var mapWorld = BedwarsMapManager.getWorldLoadedForEditing(mapName)
         mapWorld = mapWorld ?: loadForEdit(mapName, playerRef).join()
-        BedwarsMapManager.teleportPlayerToWorld(playerRef, world, mapWorld, store)
+        BedwarsMapManager.teleportPlayerToWorld(ref, mapWorld, store)
     }
 
     companion object {

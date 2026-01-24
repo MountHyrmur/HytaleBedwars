@@ -4,6 +4,7 @@ import com.hypixel.hytale.assetstore.AssetPack
 import com.hypixel.hytale.builtin.instances.InstancesPlugin
 import com.hypixel.hytale.builtin.instances.config.InstanceWorldConfig
 import com.hypixel.hytale.builtin.instances.removal.IdleTimeoutCondition
+import com.hypixel.hytale.component.Ref
 import com.hypixel.hytale.component.Store
 import com.hypixel.hytale.math.vector.Transform
 import com.hypixel.hytale.math.vector.Vector3i
@@ -11,6 +12,7 @@ import com.hypixel.hytale.protocol.Color
 import com.hypixel.hytale.protocol.GameMode
 import com.hypixel.hytale.server.core.Message
 import com.hypixel.hytale.server.core.asset.AssetModule
+import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent
 import com.hypixel.hytale.server.core.modules.entity.teleport.Teleport
 import com.hypixel.hytale.server.core.universe.PlayerRef
 import com.hypixel.hytale.server.core.universe.Universe
@@ -94,13 +96,11 @@ object BedwarsMapManager {
     }
 
     fun teleportPlayerToWorld(
-        player: PlayerRef, playerWorld: World, targetWorld: World, store: Store<EntityStore?>
+        player: Ref<EntityStore?>, targetWorld: World, store: Store<EntityStore?>
     ) {
-        playerWorld.execute {
-            val spawnTransform = targetWorld.worldConfig.spawnProvider!!.getSpawnPoint(player.reference!!, store)
-            val teleportComponent = Teleport.createForPlayer(targetWorld, spawnTransform)
-            store.addComponent(player.reference!!, Teleport.getComponentType(), teleportComponent)
-        }
+        val transformComponent = store.getComponent(player, TransformComponent.getComponentType())
+        val transform = transformComponent?.transform?.clone()
+        InstancesPlugin.teleportPlayerToInstance(player, store, targetWorld, transform)
     }
 }
 

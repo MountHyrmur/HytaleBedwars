@@ -16,6 +16,7 @@ class BedwarsCommand : AbstractCommandCollection("bedwars", "server.commands.bed
             this.addSubCommand(BedwarsMapEditCommand())
             this.addSubCommand(BedwarsMapDeleteCommand())
             this.addSubCommand(BedwarsMapListCommand())
+            this.addSubCommand(BedwarsMapExitCommand())
         }
     }
 
