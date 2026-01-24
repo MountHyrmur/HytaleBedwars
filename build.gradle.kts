@@ -1,6 +1,6 @@
 plugins {
     kotlin("jvm") version "2.3.0"
-    id("app.ultradev.hytalegradle") version "2.0.0"
+    id("app.ultradev.hytalegradle") version "2.0.1"
 }
 
 group = project.property("maven_group") as String
