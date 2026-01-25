@@ -8,8 +8,8 @@ import com.hypixel.hytale.component.system.tick.EntityTickingSystem
 import com.hypixel.hytale.math.vector.Vector3d
 import com.hypixel.hytale.server.core.entity.ItemUtils
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore
-import yt.szczurek.hyrmur.bedwars.component.running.Generator
-import yt.szczurek.hyrmur.bedwars.data.GeneratorDropEntry
+import yt.szczurek.hyrmur.bedwars.component.Generator
+import yt.szczurek.hyrmur.bedwars.asset.data.GeneratorDropEntry
 import javax.annotation.Nonnull
 
 class GeneratorSystem : EntityTickingSystem<EntityStore?>() {

@@ -1,4 +1,4 @@
-package yt.szczurek.hyrmur.bedwars.data
+package yt.szczurek.hyrmur.bedwars.asset.data
 
 import com.hypixel.hytale.codec.Codec
 import com.hypixel.hytale.codec.KeyedCodec

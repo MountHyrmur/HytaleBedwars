@@ -14,9 +14,9 @@ import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder
 import com.hypixel.hytale.server.core.ui.builder.UIEventBuilder
 import com.hypixel.hytale.server.core.universe.PlayerRef
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore
-import yt.szczurek.hyrmur.bedwars.component.data.GeneratorBuilder
-import yt.szczurek.hyrmur.bedwars.component.running.Generator
-import yt.szczurek.hyrmur.bedwars.data.BedwarsGenerator
+import yt.szczurek.hyrmur.bedwars.component.GeneratorBuilder
+import yt.szczurek.hyrmur.bedwars.component.Generator
+import yt.szczurek.hyrmur.bedwars.asset.BedwarsGenerator
 import yt.szczurek.hyrmur.bedwars.ui.GeneratorEditorGui.BindingData
 
 class GeneratorEditorGui(

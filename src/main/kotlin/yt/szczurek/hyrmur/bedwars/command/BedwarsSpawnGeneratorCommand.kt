@@ -10,7 +10,7 @@ import com.hypixel.hytale.server.core.modules.entity.component.TransformComponen
 import com.hypixel.hytale.server.core.universe.PlayerRef
 import com.hypixel.hytale.server.core.universe.world.World
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore
-import yt.szczurek.hyrmur.bedwars.component.data.GeneratorBuilder
+import yt.szczurek.hyrmur.bedwars.component.GeneratorBuilder
 
 class BedwarsSpawnGeneratorCommand :
     AbstractPlayerCommand("generator", "server.commands.bedwars.spawn.generator.desc") {

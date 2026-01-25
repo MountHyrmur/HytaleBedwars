@@ -8,7 +8,7 @@ import com.hypixel.hytale.component.query.Query
 import com.hypixel.hytale.component.system.HolderSystem
 import com.hypixel.hytale.server.core.modules.entity.tracker.NetworkId
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore
-import yt.szczurek.hyrmur.bedwars.component.data.GeneratorBuilder
+import yt.szczurek.hyrmur.bedwars.component.GeneratorBuilder
 
 class AddNetworkIdToGeneratorSystem : HolderSystem<EntityStore?>() {
     private val generatorComponentType = GeneratorBuilder.componentType

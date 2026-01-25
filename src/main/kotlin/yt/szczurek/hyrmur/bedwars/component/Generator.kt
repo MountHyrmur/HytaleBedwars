@@ -1,11 +1,11 @@
-package yt.szczurek.hyrmur.bedwars.component.running
+package yt.szczurek.hyrmur.bedwars.component
 
 import com.hypixel.hytale.component.Component
 import com.hypixel.hytale.component.ComponentType
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore
 import yt.szczurek.hyrmur.bedwars.BedwarsPlugin
-import yt.szczurek.hyrmur.bedwars.data.BedwarsGenerator
-import yt.szczurek.hyrmur.bedwars.data.GeneratorDropEntry
+import yt.szczurek.hyrmur.bedwars.asset.BedwarsGenerator
+import yt.szczurek.hyrmur.bedwars.asset.data.GeneratorDropEntry
 import java.util.*
 import java.util.stream.Collectors
 
@@ -16,7 +16,8 @@ class Generator : Component<EntityStore?> {
 
     constructor(config: BedwarsGenerator) {
         this.drops = Arrays.stream(config.drops).collect(
-            Collectors.toMap(GeneratorDropEntry::item
+            Collectors.toMap(
+                GeneratorDropEntry::item
             ) { it }
         )
         val cooldowns = HashMap<String, Long>()
@@ -38,6 +39,6 @@ class Generator : Component<EntityStore?> {
 
     companion object {
         val componentType: ComponentType<EntityStore?, Generator>
-            get() = BedwarsPlugin.get().generatorComponentType
+            get() = BedwarsPlugin.Companion.get().generatorComponentType
     }
 }

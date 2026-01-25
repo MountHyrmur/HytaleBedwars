@@ -11,9 +11,9 @@ import com.hypixel.hytale.server.core.plugin.JavaPlugin
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore
 import yt.szczurek.hyrmur.bedwars.command.BedwarsCommand
-import yt.szczurek.hyrmur.bedwars.component.data.GeneratorBuilder
-import yt.szczurek.hyrmur.bedwars.component.running.Generator
-import yt.szczurek.hyrmur.bedwars.data.BedwarsGenerator
+import yt.szczurek.hyrmur.bedwars.component.GeneratorBuilder
+import yt.szczurek.hyrmur.bedwars.component.Generator
+import yt.szczurek.hyrmur.bedwars.asset.BedwarsGenerator
 import yt.szczurek.hyrmur.bedwars.interaction.EditGeneratorInteraction
 import yt.szczurek.hyrmur.bedwars.system.AddNetworkIdToGeneratorSystem
 import yt.szczurek.hyrmur.bedwars.system.GeneratorSystem

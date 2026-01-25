@@ -1,4 +1,4 @@
-package yt.szczurek.hyrmur.bedwars.data
+package yt.szczurek.hyrmur.bedwars.asset
 
 import com.hypixel.hytale.assetstore.AssetExtraInfo
 import com.hypixel.hytale.assetstore.AssetRegistry
@@ -9,6 +9,7 @@ import com.hypixel.hytale.codec.Codec
 import com.hypixel.hytale.codec.KeyedCodec
 import com.hypixel.hytale.codec.codecs.array.ArrayCodec
 import com.hypixel.hytale.codec.schema.metadata.ui.UIDefaultCollapsedState
+import yt.szczurek.hyrmur.bedwars.asset.data.GeneratorDropEntry
 import java.util.*
 
 class BedwarsGenerator : JsonAssetWithMap<String?, DefaultAssetMap<String?, BedwarsGenerator?>?> {
@@ -36,7 +37,7 @@ class BedwarsGenerator : JsonAssetWithMap<String?, DefaultAssetMap<String?, Bedw
                 { generator -> generator.name },
                 { asset, data -> asset.data = data },
                 { asset -> asset.data }).append(
-                    KeyedCodec(
+                KeyedCodec(
                     "Drops", ArrayCodec(GeneratorDropEntry.CODEC) { size -> arrayOfNulls(size) }),
                     { generator, l -> generator.drops = l },
                     { generator -> generator.drops }).metadata(UIDefaultCollapsedState.UNCOLLAPSED).add().build()

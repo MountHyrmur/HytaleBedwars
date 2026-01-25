@@ -7,9 +7,9 @@ import com.hypixel.hytale.component.Store
 import com.hypixel.hytale.component.query.Query
 import com.hypixel.hytale.component.system.RefChangeSystem
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore
-import yt.szczurek.hyrmur.bedwars.component.data.GeneratorBuilder
-import yt.szczurek.hyrmur.bedwars.component.running.Generator
-import yt.szczurek.hyrmur.bedwars.data.BedwarsGenerator
+import yt.szczurek.hyrmur.bedwars.component.GeneratorBuilder
+import yt.szczurek.hyrmur.bedwars.component.Generator
+import yt.szczurek.hyrmur.bedwars.asset.BedwarsGenerator
 
 class UpdateGeneratorFromBuilderSystem : RefChangeSystem<EntityStore, GeneratorBuilder>() {
     private val generatorComponentType = GeneratorBuilder.componentType

@@ -1,4 +1,4 @@
-package yt.szczurek.hyrmur.bedwars.component.data
+package yt.szczurek.hyrmur.bedwars.component
 
 import com.hypixel.hytale.codec.Codec
 import com.hypixel.hytale.codec.KeyedCodec
@@ -31,7 +31,7 @@ class GeneratorBuilder : Component<EntityStore?> {
     companion object {
         val CODEC: BuilderCodec<GeneratorBuilder> =
             BuilderCodec.builder(GeneratorBuilder::class.java) { GeneratorBuilder() }.append(
-                    KeyedCodec("GeneratorName", Codec.STRING),
+                KeyedCodec("GeneratorName", Codec.STRING),
                     { data, value -> data.generatorName = value },
                     { data -> data.generatorName }).add().build()
 
