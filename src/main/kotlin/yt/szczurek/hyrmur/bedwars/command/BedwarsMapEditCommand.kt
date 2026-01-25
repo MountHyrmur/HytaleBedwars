@@ -8,8 +8,6 @@ import com.hypixel.hytale.server.core.universe.PlayerRef
 import com.hypixel.hytale.server.core.universe.world.World
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore
 import yt.szczurek.hyrmur.bedwars.BedwarsMapManager
-import yt.szczurek.hyrmur.bedwars.BedwarsMapManager.loadForEditing
-import java.util.concurrent.CompletableFuture
 
 class BedwarsMapEditCommand : BedwarsMapActionCommand("edit") {
     override fun execute(
@@ -21,7 +19,7 @@ class BedwarsMapEditCommand : BedwarsMapActionCommand("edit") {
             return
         }
         var mapWorld = BedwarsMapManager.getWorldLoadedForEditing(mapName)
-        mapWorld = mapWorld ?: loadForEdit(mapName, playerRef).join()
+        mapWorld = mapWorld ?: loadForEdit(mapName, playerRef)
         world.execute {
             BedwarsMapManager.teleportPlayerToWorld(ref, mapWorld, store)
         }
@@ -32,12 +30,11 @@ class BedwarsMapEditCommand : BedwarsMapActionCommand("edit") {
         val MESSAGE_LOAD_START = Message.translation("server.commands.bedwars.map.common.loadStart")
         val MESSAGE_LOAD_END = Message.translation("server.commands.bedwars.map.common.loadEnd")
 
-        fun loadForEdit(name: String, player: PlayerRef): CompletableFuture<World> {
+        fun loadForEdit(name: String, player: PlayerRef): World {
             player.sendMessage(MESSAGE_LOAD_START.param("name", name))
-            return loadForEditing(name).thenApply { mapWorld: World ->
-                player.sendMessage(MESSAGE_LOAD_END.param("name", name))
-                return@thenApply mapWorld
-            }
+            val mapWorld = BedwarsMapManager.loadForEditing(name)
+            player.sendMessage(MESSAGE_LOAD_END.param("name", name))
+            return mapWorld
         }
     }
 }

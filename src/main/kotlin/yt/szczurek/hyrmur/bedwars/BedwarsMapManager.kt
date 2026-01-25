@@ -26,24 +26,25 @@ import java.io.IOException
 import java.nio.file.Files
 import java.util.*
 import java.util.concurrent.CompletableFuture
+import kotlin.io.path.div
 
 object BedwarsMapManager {
     val DEFAULT_CHUNK_TINT: Color = Color(91.toByte(), 158.toByte(), 40.toByte())
     val MESSAGE_ALREADY_EXISTS = Message.translation("server.commands.bedwars.map.create.alreadyExists")
 
-    fun createNew(name: String): CompletableFuture<Message?> {
+    fun createNew(name: String): Message? {
         val optionalPack =
             AssetModule.get().assetPacks.stream().filter { assetPack: AssetPack -> !assetPack.isImmutable }.findFirst()
         if (optionalPack.isEmpty) {
-            return CompletableFuture.completedFuture((Message.translation("server.commands.instances.edit.assetsImmutable")))
+            return Message.translation("server.commands.instances.edit.assetsImmutable")
         }
         val pack = optionalPack.get()
 
         if (doesMapExist(name)) {
-            return CompletableFuture.completedFuture(MESSAGE_ALREADY_EXISTS.param("name", name))
+            return MESSAGE_ALREADY_EXISTS.param("name", name)
         }
 
-        val path = pack.root.resolve("Server").resolve("Instances").resolve(name)
+        val configPath = pack.root / "Server" / "Instances" / name
         val config = WorldConfig()
         config.isSpawningNPC = false
         config.isPvpEnabled = true
@@ -53,20 +54,20 @@ object BedwarsMapManager {
         config.worldMapProvider = DisabledWorldMapProvider()
 
         try {
-            Files.createDirectories(path)
+            Files.createDirectories(configPath)
         } catch (err: IOException) {
-            return CompletableFuture.completedFuture(
-                Message.translation("server.commands.instances.createDirectory.failed").param("errormsg", err.message!!)
-            )
+            return Message.translation("server.commands.instances.createDirectory.failed").param("errormsg", err.message!!)
         }
 
-        return WorldConfig.save(path.resolve("instance.bson"), config).thenApply { null }
+        WorldConfig.save(configPath.resolve("instance.bson"), config).join()
+
+        return null
     }
 
-    fun loadForEditing(name: String): CompletableFuture<World> {
+    fun loadForEditing(name: String): World {
         val path = InstancesPlugin.getInstanceAssetPath(name)
         val universe = Universe.get()
-        return WorldConfig.load(path.resolve("instance.bson")).thenCompose { config: WorldConfig ->
+        val config = WorldConfig.load(path.resolve("instance.bson")).join()
             config.uuid = UUID.randomUUID()
             config.isSavingPlayers = false
             @Suppress("UsePropertyAccessSyntax") // Doesn't compile for some reason
@@ -77,8 +78,7 @@ object BedwarsMapManager {
             InstanceWorldConfig.ensureAndGet(config).setRemovalConditions(IdleTimeoutCondition())
             config.markChanged()
             val worldName = getWorldNameForEditing(name)
-            universe.makeWorld(worldName, path, config)
-        }
+        return universe.makeWorld(worldName, path, config).join()
     }
 
     fun getWorldNameForEditing(name: String): String {

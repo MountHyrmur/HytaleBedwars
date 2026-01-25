@@ -16,20 +16,20 @@ class BedwarsMapCreateCommand : BedwarsMapActionCommand("create") {
         ctx: CommandContext, store: Store<EntityStore?>, ref: Ref<EntityStore?>, playerRef: PlayerRef, world: World
     ) {
         val mapName = mapNameArg.get(ctx)
-        val error = BedwarsMapManager.createNew(mapName).join()
+        val error = BedwarsMapManager.createNew(mapName)
         if (error != null) {
             ctx.sendMessage(error)
             return
         }
         ctx.sendMessage(MESSAGE_CREATED.param("name", mapName!!))
-        BedwarsMapEditCommand.loadForEdit(mapName, playerRef).thenAccept { mapWorld ->
+        try {
+            val mapWorld = BedwarsMapEditCommand.loadForEdit(mapName, playerRef)
             mapWorld.execute { initializeWorld(mapWorld) }
             world.execute {
                 BedwarsMapManager.teleportPlayerToWorld(ref, mapWorld, store)
             }
-        }.exceptionally {  t ->
-            ctx.sendMessage(Message.raw("Error: ${t.message}\n${t.stackTrace}"))
-            return@exceptionally null
+        } catch (e: Exception) {
+            ctx.sendMessage(Message.raw("Error: ${e.message}\n${e.stackTrace}"))
         }
     }
 
