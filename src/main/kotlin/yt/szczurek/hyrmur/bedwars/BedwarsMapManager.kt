@@ -48,7 +48,7 @@ object BedwarsMapManager {
         config.isSpawningNPC = false
         config.isPvpEnabled = true
         config.isGameTimePaused = true
-        config.worldGenProvider = VoidWorldGenProvider(DEFAULT_CHUNK_TINT, null)
+        config.worldGenProvider = VoidWorldGenProvider(DEFAULT_CHUNK_TINT, "Env_Zone1_Plains")
         config.spawnProvider = GlobalSpawnProvider(Transform(Vector3i(0, 125, 0)))
         config.worldMapProvider = DisabledWorldMapProvider()
 
