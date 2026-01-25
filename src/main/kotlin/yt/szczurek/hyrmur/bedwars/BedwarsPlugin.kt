@@ -14,6 +14,7 @@ import yt.szczurek.hyrmur.bedwars.command.BedwarsCommand
 import yt.szczurek.hyrmur.bedwars.component.GeneratorBuilder
 import yt.szczurek.hyrmur.bedwars.component.Generator
 import yt.szczurek.hyrmur.bedwars.asset.BedwarsGenerator
+import yt.szczurek.hyrmur.bedwars.asset.BedwarsMap
 import yt.szczurek.hyrmur.bedwars.asset.BedwarsTeam
 import yt.szczurek.hyrmur.bedwars.interaction.EditGeneratorInteraction
 import yt.szczurek.hyrmur.bedwars.system.AddNetworkIdToGeneratorSystem
@@ -53,6 +54,16 @@ class BedwarsPlugin(init: JavaPluginInit) : JavaPlugin(init) {
             )
                 .setPath("Bedwars/Teams").setCodec(BedwarsTeam.CODEC)
                 .setKeyFunction(BedwarsTeam::name)
+                .build()
+        )
+
+        AssetRegistry.register(
+            HytaleAssetStore.builder(
+                BedwarsMap::class.java,
+                DefaultAssetMap()
+            )
+                .setPath("Bedwars/Maps").setCodec(BedwarsMap.CODEC)
+                .setKeyFunction(BedwarsMap::name)
                 .build()
         )
 

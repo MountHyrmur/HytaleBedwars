@@ -5,31 +5,34 @@ import com.hypixel.hytale.assetstore.AssetRegistry
 import com.hypixel.hytale.assetstore.codec.AssetBuilderCodec
 import com.hypixel.hytale.assetstore.map.DefaultAssetMap
 import com.hypixel.hytale.assetstore.map.JsonAssetWithMap
+import com.hypixel.hytale.builtin.instances.InstanceValidator
 import com.hypixel.hytale.codec.Codec
 import com.hypixel.hytale.codec.KeyedCodec
 import com.hypixel.hytale.codec.validation.Validators
 import com.hypixel.hytale.protocol.Color
 import com.hypixel.hytale.server.core.asset.util.ColorParseUtil
 import com.hypixel.hytale.server.core.codec.ProtocolCodecs
+import com.hypixel.hytale.server.npc.asset.builder.validators.IntSingleValidator
+import com.hypixel.hytale.server.npc.asset.builder.validators.IntValidator
 
 
-class BedwarsTeam : JsonAssetWithMap<String?, DefaultAssetMap<String?, BedwarsTeam?>?> {
+class BedwarsMap : JsonAssetWithMap<String, DefaultAssetMap<String, BedwarsMap>> {
     var name: String? = null
         private set
     private var data: AssetExtraInfo.Data? = null
     var displayName: String? = null
-    var color: Color = DEFAULT_COLOR
+    var instance: String? = null
+    var teamCount: Int? = null
 
     override fun getId(): String? {
         return name
     }
 
     companion object {
-        val DEFAULT_COLOR: Color = ColorParseUtil.hexStringToColor("#FF0000")
-        val CODEC: AssetBuilderCodec<String?, BedwarsTeam> =
+        val CODEC: AssetBuilderCodec<String?, BedwarsMap> =
             AssetBuilderCodec.builder(
-                BedwarsTeam::class.java,
-                { BedwarsTeam() },
+                BedwarsMap::class.java,
+                { BedwarsMap() },
                 Codec.STRING,
                 { asset, id -> asset.name = id },
                 { asset -> asset.name },
@@ -45,20 +48,27 @@ class BedwarsTeam : JsonAssetWithMap<String?, DefaultAssetMap<String?, BedwarsTe
                 .addValidator(Validators.nonEmptyString())
                 .add()
                 .append(
-                    KeyedCodec("Color", ProtocolCodecs.COLOR),
-                    { team, color -> team.color = color },
-                    { team -> team.color })
+                    KeyedCodec("Instance", Codec.STRING),
+                    { team, instance -> team.instance = instance },
+                    { team -> team.instance })
                 .addValidator(Validators.nonNull())
+                .addValidator(InstanceValidator.INSTANCE)
+                .add()
+                .append(
+                    KeyedCodec("TeamCount", Codec.INTEGER),
+                    { team, teamCount -> team.teamCount = teamCount },
+                    { team -> team.teamCount })
+                .addValidator(Validators.greaterThan(0))
                 .add()
                 .build()
 
-        private var ASSET_MAP: DefaultAssetMap<String?, BedwarsTeam?>? = null
-        val assetMap: DefaultAssetMap<String?, BedwarsTeam?>
+        private var ASSET_MAP: DefaultAssetMap<String, BedwarsMap>? = null
+        val assetMap: DefaultAssetMap<String, BedwarsMap>
             get() {
                 if (ASSET_MAP == null) {
                     ASSET_MAP =
-                        AssetRegistry.getAssetStore<String?, BedwarsTeam?, DefaultAssetMap<String?, BedwarsTeam?>?>(
-                            BedwarsTeam::class.java
+                        AssetRegistry.getAssetStore(
+                            BedwarsMap::class.java
                         ).getAssetMap()
                 }
                 return ASSET_MAP!!
