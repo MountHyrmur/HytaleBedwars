@@ -8,13 +8,13 @@ import com.hypixel.hytale.component.query.Query
 import com.hypixel.hytale.component.system.HolderSystem
 import com.hypixel.hytale.server.core.modules.entity.tracker.NetworkId
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore
-import yt.szczurek.hyrmur.bedwars.component.GeneratorBuilder
+import yt.szczurek.hyrmur.bedwars.component.AutoNetworkId
 
-class AddNetworkIdToGeneratorSystem : HolderSystem<EntityStore?>() {
-    private val generatorComponentType = GeneratorBuilder.componentType
+class AutoAddNetworkIdSystem : HolderSystem<EntityStore?>() {
+    private val autoNetworkIdComponentType = AutoNetworkId.componentType
     private val networkIdComponentType = NetworkId.getComponentType()
     private val query: Query<EntityStore?> =
-        Query.and(this.generatorComponentType, Query.not(this.networkIdComponentType))
+        Query.and(this.autoNetworkIdComponentType, Query.not(this.networkIdComponentType))
 
     override fun onEntityAdd(holder: Holder<EntityStore?>, reason: AddReason, store: Store<EntityStore?>) {
         if (!holder.getArchetype()!!.contains(NetworkId.getComponentType())) {

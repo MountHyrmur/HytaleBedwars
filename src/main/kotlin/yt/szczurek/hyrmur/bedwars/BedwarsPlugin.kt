@@ -18,10 +18,13 @@ import yt.szczurek.hyrmur.bedwars.asset.BedwarsGenerator
 import yt.szczurek.hyrmur.bedwars.asset.BedwarsMap
 import yt.szczurek.hyrmur.bedwars.asset.BedwarsTeam
 import yt.szczurek.hyrmur.bedwars.command.BedwarsCommand
+import yt.szczurek.hyrmur.bedwars.component.AutoNetworkId
 import yt.szczurek.hyrmur.bedwars.component.Generator
 import yt.szczurek.hyrmur.bedwars.component.GeneratorBuilder
+import yt.szczurek.hyrmur.bedwars.component.QueueSpawnpoint
+import yt.szczurek.hyrmur.bedwars.component.TeamSpawnpoint
 import yt.szczurek.hyrmur.bedwars.interaction.EditGeneratorInteraction
-import yt.szczurek.hyrmur.bedwars.system.AddNetworkIdToGeneratorSystem
+import yt.szczurek.hyrmur.bedwars.system.AutoAddNetworkIdSystem
 import yt.szczurek.hyrmur.bedwars.system.GeneratorSystem
 import yt.szczurek.hyrmur.bedwars.system.UpdateGeneratorFromBuilderSystem
 
@@ -29,6 +32,12 @@ class BedwarsPlugin(init: JavaPluginInit) : JavaPlugin(init) {
     lateinit var generatorComponentType: ComponentType<EntityStore?, Generator>
         private set
     lateinit var generatorBuilderComponent: ComponentType<EntityStore, GeneratorBuilder>
+        private set
+    lateinit var teamSpawnpointComponent: ComponentType<EntityStore, TeamSpawnpoint>
+        private set
+    lateinit var queueSpawnpointComponent: ComponentType<EntityStore, QueueSpawnpoint>
+        private set
+    lateinit var autoNetworkIdComponent: ComponentType<EntityStore, AutoNetworkId>
         private set
 
     val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
@@ -85,9 +94,27 @@ class BedwarsPlugin(init: JavaPluginInit) : JavaPlugin(init) {
             GeneratorBuilder.CODEC
         )
 
+        this.teamSpawnpointComponent = entityStoreRegistry.registerComponent(
+            TeamSpawnpoint::class.java,
+            "TeamSpawnpoint",
+            TeamSpawnpoint.CODEC
+        )
+
+        this.queueSpawnpointComponent = entityStoreRegistry.registerComponent(
+            QueueSpawnpoint::class.java,
+            "QueueSpawnpoint",
+            QueueSpawnpoint.CODEC
+        )
+
+        this.autoNetworkIdComponent = entityStoreRegistry.registerComponent(
+            AutoNetworkId::class.java,
+            "AutoNetworkId",
+            AutoNetworkId.CODEC
+        )
+
         entityStoreRegistry.registerSystem(UpdateGeneratorFromBuilderSystem())
         entityStoreRegistry.registerSystem(GeneratorSystem())
-        entityStoreRegistry.registerSystem(AddNetworkIdToGeneratorSystem())
+        entityStoreRegistry.registerSystem(AutoAddNetworkIdSystem())
 
         this.getCodecRegistry(Interaction.CODEC)
             .register("OpenGeneratorEditor", EditGeneratorInteraction::class.java, EditGeneratorInteraction.CODEC)

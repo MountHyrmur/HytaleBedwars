@@ -23,6 +23,8 @@ class BedwarsCommand : AbstractCommandCollection("bedwars", "server.commands.bed
     class BedwarsSpawnCommand : AbstractCommandCollection("spawn", "server.commands.bedwars.spawn.desc") {
         init {
             this.addSubCommand(BedwarsSpawnGeneratorCommand())
+            this.addSubCommand(BedwarsSpawnTeamSpawnCommand())
+            this.addSubCommand(BedwarsSpawnQueueSpawnCommand())
         }
     }
 }

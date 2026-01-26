@@ -38,10 +38,8 @@ class GeneratorBuilder : Component<EntityStore?> {
         val componentType: ComponentType<EntityStore, GeneratorBuilder>
             get() = BedwarsPlugin.get().generatorBuilderComponent
 
-        fun createGeneratorBuilderEntity(
-            pos: Vector3d, store: Store<EntityStore>
-        ): Holder<EntityStore> {
-            val holder: Holder<EntityStore> = EntityUtil.createUtilityEntity(pos, "Bedwars_Generator", store)
+        fun createGeneratorBuilderEntity(pos: Vector3d): Holder<EntityStore> {
+            val holder: Holder<EntityStore> = EntityUtil.createUtilityEntity(pos, "Bedwars_Generator")
             holder.addComponent(componentType, GeneratorBuilder())
             holder.ensureComponent(Interactable.getComponentType())
             val interactions = Interactions()

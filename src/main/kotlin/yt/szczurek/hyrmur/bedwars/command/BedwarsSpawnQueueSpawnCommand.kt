@@ -11,9 +11,10 @@ import com.hypixel.hytale.server.core.universe.PlayerRef
 import com.hypixel.hytale.server.core.universe.world.World
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore
 import yt.szczurek.hyrmur.bedwars.component.GeneratorBuilder
+import yt.szczurek.hyrmur.bedwars.component.TeamSpawnpoint
 
-class BedwarsSpawnGeneratorCommand :
-    AbstractPlayerCommand("generator", "server.commands.bedwars.spawn.generator.desc") {
+class BedwarsSpawnQueueSpawnCommand :
+    AbstractPlayerCommand("teamspawn", "server.commands.bedwars.spawn.teamspawn.desc") {
     override fun execute(
         commandContext: CommandContext,
         store: Store<EntityStore>,
@@ -24,7 +25,7 @@ class BedwarsSpawnGeneratorCommand :
         val playerTransform: TransformComponent =
             checkNotNull(store.getComponent(ref, EntityModule.get().transformComponentType))
         val pos = playerTransform.position.add(0.0, 1.0, 0.0)
-        val generator = GeneratorBuilder.createGeneratorBuilderEntity(pos)
+        val generator = TeamSpawnpoint.createTeamSpawnpoint(pos)
         store.addEntity(generator, AddReason.SPAWN)
     }
 }
