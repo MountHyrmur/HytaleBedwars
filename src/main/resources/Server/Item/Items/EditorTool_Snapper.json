@@ -1,0 +1,36 @@
+{
+  "TranslationProperties": {
+    "Name": "server.builderTools.tools.Snapper.name",
+    "Description": "server.builderTools.tools.Snapper.desc"
+  },
+  "Icon": "Icons/Items/EditorTools/Entity.png",
+  "Categories": [
+    "Tool.BuilderTool"
+  ],
+  "Model": "Items/Tools/Brush/Brush.blockymodel",
+  "Texture": "Items/Tools/Brush/Brush_Texture.png",
+  "MaxStack": 1,
+  "PlayerAnimationsId": "Item",
+  "BuilderTool": {
+    "UI": [],
+    "Tools": [
+      {
+        "Id": "Entity",
+        "IsBrush": false
+      }
+    ]
+  },
+  "InteractionConfig": {
+    "DebugOutlines": true,
+    "UseDistance": {
+      "Adventure": 128,
+      "Creative": 128
+    },
+    "AllEntities": true
+  },
+  "Quality": "Tool",
+  "Interactions": {
+    "Primary": "SnapToGrid",
+    "Secondary": "SnapToGrid"
+  }
+}

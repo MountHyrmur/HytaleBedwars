@@ -29,3 +29,5 @@ customUI.generatorEditor.button.deactivateGenerator = Deactivate
 customUI.generatorEditor.error.invalidGeneratorName = This is not a valid generator name
 customUI.teamSpawnpointEditor.title = Edit team spawnpoint
 customUI.teamSpawnpointEditor.teamName = Team name
+builderTools.tools.Snapper.name = Snapper Tool
+builderTools.tools.Snapper.desc = Click on entities to snap them to centers and edges of blocks

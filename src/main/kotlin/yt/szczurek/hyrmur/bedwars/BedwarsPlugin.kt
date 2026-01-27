@@ -6,6 +6,7 @@ import com.hypixel.hytale.component.ComponentType
 import com.hypixel.hytale.logger.HytaleLogger
 import com.hypixel.hytale.server.core.asset.HytaleAssetStore
 import com.hypixel.hytale.server.core.asset.type.item.config.Item
+import com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.server.OpenCustomUIInteraction
 import com.hypixel.hytale.server.core.plugin.JavaPlugin
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit
@@ -19,6 +20,7 @@ import yt.szczurek.hyrmur.bedwars.asset.BedwarsMap
 import yt.szczurek.hyrmur.bedwars.asset.BedwarsTeam
 import yt.szczurek.hyrmur.bedwars.command.BedwarsCommand
 import yt.szczurek.hyrmur.bedwars.component.*
+import yt.szczurek.hyrmur.bedwars.interaction.SnapToGridInteraction
 import yt.szczurek.hyrmur.bedwars.page.GeneratorEditorPageSupplier
 import yt.szczurek.hyrmur.bedwars.page.TeamSpawnpointEditorPageSupplier
 import yt.szczurek.hyrmur.bedwars.system.AutoAddNetworkIdSystem
@@ -113,6 +115,9 @@ class BedwarsPlugin(init: JavaPluginInit) : JavaPlugin(init) {
         entityStoreRegistry.registerSystem(UpdateGeneratorFromBuilderSystem())
         entityStoreRegistry.registerSystem(GeneratorSystem())
         entityStoreRegistry.registerSystem(AutoAddNetworkIdSystem())
+
+        this.getCodecRegistry(Interaction.CODEC)
+            .register("SnapToGrid", SnapToGridInteraction::class.java, SnapToGridInteraction.CODEC)
 
         this.getCodecRegistry(OpenCustomUIInteraction.PAGE_CODEC)
             .register("GeneratorEditor", GeneratorEditorPageSupplier::class.java, GeneratorEditorPageSupplier.CODEC)
