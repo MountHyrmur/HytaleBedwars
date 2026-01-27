@@ -1,4 +1,4 @@
-package yt.szczurek.hyrmur.bedwars.ui
+package yt.szczurek.hyrmur.bedwars.page
 
 import com.hypixel.hytale.codec.Codec
 import com.hypixel.hytale.codec.KeyedCodec
@@ -14,16 +14,15 @@ import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder
 import com.hypixel.hytale.server.core.ui.builder.UIEventBuilder
 import com.hypixel.hytale.server.core.universe.PlayerRef
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore
-import yt.szczurek.hyrmur.bedwars.component.GeneratorBuilder
-import yt.szczurek.hyrmur.bedwars.component.Generator
 import yt.szczurek.hyrmur.bedwars.asset.BedwarsGenerator
-import yt.szczurek.hyrmur.bedwars.ui.GeneratorEditorGui.BindingData
+import yt.szczurek.hyrmur.bedwars.component.Generator
+import yt.szczurek.hyrmur.bedwars.component.GeneratorBuilder
 
-class GeneratorEditorGui(
+class GeneratorEditorPage(
     playerRef: PlayerRef,
     private val generator: Ref<EntityStore>,
     lifetime: CustomPageLifetime
-) : InteractiveCustomUIPage<BindingData>(playerRef, lifetime, BindingData.CODEC) {
+) : InteractiveCustomUIPage<GeneratorEditorPage.BindingData>(playerRef, lifetime, BindingData.CODEC) {
     private var generatorName: String? = null
 
     class BindingData {
@@ -58,7 +57,7 @@ class GeneratorEditorGui(
         )
 
         val generatorBuilder: GeneratorBuilder =
-            checkNotNull(store.getComponent(generator, GeneratorBuilder.componentType))
+            checkNotNull(store.getComponent(generator, GeneratorBuilder.Companion.componentType))
         generatorName = generatorBuilder.generatorName
         uiCommandBuilder.set("#GeneratorName.Value", generatorName!!)
 
@@ -101,7 +100,7 @@ class GeneratorEditorGui(
         generatorConfig ?: return
         store.putComponent(
             generator,
-            GeneratorBuilder.componentType,
+            GeneratorBuilder.Companion.componentType,
             GeneratorBuilder(generatorName!!)
         )
     }
@@ -109,7 +108,7 @@ class GeneratorEditorGui(
     private fun handleAction(action: String, store: Store<EntityStore>) {
         when (action) {
             "ActivateGenerator" -> {
-                val component = store.getComponent(generator, Generator.componentType)
+                val component = store.getComponent(generator, Generator.Companion.componentType)
                 if (component != null) {
                     close()
                     return
@@ -122,16 +121,16 @@ class GeneratorEditorGui(
                     return
                 }
 
-                store.addComponent(generator, Generator.componentType, Generator(config))
+                store.addComponent(generator, Generator.Companion.componentType, Generator(config))
                 close()
             }
             "DeactivateGenerator" -> {
-                store.removeComponentIfExists(generator, Generator.componentType)
+                store.removeComponentIfExists(generator, Generator.Companion.componentType)
                 return
             }
         }
     }
 
     private val generatorConfig: BedwarsGenerator?
-        get() = BedwarsGenerator.assetMap.getAsset(generatorName)
+        get() = BedwarsGenerator.Companion.assetMap.getAsset(generatorName)
 }

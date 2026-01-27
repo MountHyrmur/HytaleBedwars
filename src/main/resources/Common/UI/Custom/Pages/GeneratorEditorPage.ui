@@ -7,7 +7,7 @@ $C.@DecoratedContainer {
 
   #Title {
     Label {
-      Text: "Edit generator";
+      Text: %server.customUI.generatorEditor.title;
       Style: (
         ...$C.@TitleStyle,
         HorizontalAlignment: Center,
@@ -20,7 +20,7 @@ $C.@DecoratedContainer {
     LayoutMode: Top;
     Padding: (Horizontal: 10);
 
-    Group #BlockPattern {
+    Group {
       LayoutMode: Top;
       Anchor: (Bottom: 8);
 

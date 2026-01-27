@@ -1,0 +1,42 @@
+$C = "../Common.ui";
+
+$C.@PageOverlay {}
+
+$C.@DecoratedContainer {
+  Anchor: (Width: 740, Height: 480);
+
+  #Title {
+    Label {
+      Text: %server.customUI.teamSpawnpointEditor.title;
+      Style: (
+        ...$C.@TitleStyle,
+        HorizontalAlignment: Center,
+      );
+      Padding: (Horizontal: 19);
+    }
+  }
+
+  #Content {
+    LayoutMode: Top;
+    Padding: (Horizontal: 10);
+
+    Group {
+      LayoutMode: Top;
+      Anchor: (Bottom: 8);
+
+      Label {
+        Text: %server.customUI.teamSpawnpointEditor.teamName;
+        Anchor: (Bottom: 4);
+        Style: $C.@DefaultLabelStyle;
+      }
+
+      $C.@TextField #TeamName {
+        @Anchor = (Left: 0);
+        MaxLength: 512;
+        PlaceholderText: "Red";
+      }
+    }
+  }
+}
+
+$C.@BackButton {}
