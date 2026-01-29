@@ -10,6 +10,7 @@ import com.hypixel.hytale.server.core.modules.interaction.interaction.config.Int
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.server.OpenCustomUIInteraction
 import com.hypixel.hytale.server.core.plugin.JavaPlugin
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit
+import com.hypixel.hytale.server.core.universe.world.events.RemoveWorldEvent
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -123,6 +124,8 @@ class BedwarsPlugin(init: JavaPluginInit) : JavaPlugin(init) {
             .register("GeneratorEditor", GeneratorEditorPageSupplier::class.java, GeneratorEditorPageSupplier.CODEC)
         this.getCodecRegistry(OpenCustomUIInteraction.PAGE_CODEC)
             .register("TeamSpawnpointEditor", TeamSpawnpointEditorPageSupplier::class.java, TeamSpawnpointEditorPageSupplier.CODEC)
+
+        this.eventRegistry.registerGlobal(RemoveWorldEvent::class.java, BedwarsMapManager::onWorldRemoveEvent)
     }
 
     override fun shutdown() {

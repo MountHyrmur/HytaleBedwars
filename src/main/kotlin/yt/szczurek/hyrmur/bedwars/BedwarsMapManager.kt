@@ -16,6 +16,7 @@ import com.hypixel.hytale.server.core.modules.entity.component.TransformComponen
 import com.hypixel.hytale.server.core.universe.Universe
 import com.hypixel.hytale.server.core.universe.world.World
 import com.hypixel.hytale.server.core.universe.world.WorldConfig
+import com.hypixel.hytale.server.core.universe.world.events.RemoveWorldEvent
 import com.hypixel.hytale.server.core.universe.world.spawn.GlobalSpawnProvider
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore
 import com.hypixel.hytale.server.core.universe.world.worldgen.provider.VoidWorldGenProvider
@@ -35,6 +36,8 @@ object BedwarsMapManager {
     val MESSAGE_NO_MUTABLE_PACK = Message.translation("server.commands.bedwars.map.create.noMutablePack")
     val MESSAGE_IO_CREATION_FAILED = Message.translation("server.commands.bedwars.map.createIoFail")
     val MESSAGE_NO_INSTANCE = Message.translation("server.commands.bedwars.map.edit.fail.noInstance")
+
+    private val mapsLoadedForEditing: HashMap<UUID, String> = HashMap()
 
     suspend fun createNew(name: String) {
         val optionalPack =
@@ -123,15 +126,24 @@ object BedwarsMapManager {
         InstanceWorldConfig.ensureAndGet(config).setRemovalConditions(IdleTimeoutCondition())
         config.markChanged()
         val worldName = getWorldNameForEditing(name)
-        return universe.makeWorld(worldName, path, config).await()
+        val world = universe.makeWorld(worldName, path, config).await()
+        mapsLoadedForEditing[world.worldConfig.uuid] = name
+
+        return  world
     }
 
     fun getWorldNameForEditing(name: String): String {
         return "bedwars-edit-" + InstancesPlugin.safeName(name)
     }
 
-    fun getWorldLoadedForEditing(name: String): World? {
-        return Universe.get().getWorld(getWorldNameForEditing(name))
+    fun getWorldLoadedForEditing(mapName: String): World? {
+        try {
+            val uuid = mapsLoadedForEditing.entries.first { entry -> entry.value == mapName }.key ?: return null
+            return Universe.get().getWorld(uuid)
+        } catch (_: NoSuchElementException) {
+            return null
+        }
+
     }
 
     fun doesMapExist(name: String): Boolean = BedwarsMap.assetMap.getAsset(name) != null
@@ -146,6 +158,10 @@ object BedwarsMapManager {
         val transformComponent = store.getComponent(player, TransformComponent.getComponentType())
         val transform = transformComponent?.transform?.clone()
         InstancesPlugin.teleportPlayerToInstance(player, store, targetWorld, transform)
+    }
+
+    fun onWorldRemoveEvent(event: RemoveWorldEvent) {
+        mapsLoadedForEditing.remove(event.world.worldConfig.uuid)
     }
 }
 
