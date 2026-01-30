@@ -6,6 +6,7 @@ import com.hypixel.hytale.builtin.instances.config.InstanceWorldConfig
 import com.hypixel.hytale.builtin.instances.removal.IdleTimeoutCondition
 import com.hypixel.hytale.component.Ref
 import com.hypixel.hytale.component.Store
+import com.hypixel.hytale.component.query.Query
 import com.hypixel.hytale.math.vector.Transform
 import com.hypixel.hytale.math.vector.Vector3i
 import com.hypixel.hytale.protocol.Color
@@ -25,6 +26,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.future.await
 import kotlinx.coroutines.withContext
 import yt.szczurek.hyrmur.bedwars.asset.BedwarsMap
+import yt.szczurek.hyrmur.bedwars.component.TeamSpawnpoint
 import java.io.IOException
 import java.nio.file.Files
 import java.util.*
@@ -138,7 +140,7 @@ object BedwarsMapManager {
 
     fun getWorldLoadedForEditing(mapName: String): World? {
         try {
-            val uuid = mapsLoadedForEditing.entries.first { entry -> entry.value == mapName }.key ?: return null
+            val uuid = mapsLoadedForEditing.entries.first { entry -> entry.value == mapName }.key
             return Universe.get().getWorld(uuid)
         } catch (_: NoSuchElementException) {
             return null
@@ -161,7 +163,19 @@ object BedwarsMapManager {
     }
 
     fun onWorldRemoveEvent(event: RemoveWorldEvent) {
+        updateMapMetadata(event.world)
         mapsLoadedForEditing.remove(event.world.worldConfig.uuid)
+    }
+
+    fun updateMapMetadata(world: World) {
+        val assetName = mapsLoadedForEditing[world.worldConfig.uuid]
+        if (assetName == null) {
+            BedwarsPlugin.LOGGER.atWarning().log("Called updateMapMetadata for world ${world.name} which isn't being edited")
+            return
+        }
+        val map = BedwarsMap.assetMap.getAsset(assetName) ?: return
+        map.teamCount = world.entityStore.store.getEntityCountFor(Query.and(TeamSpawnpoint.componentType))
+        map.saveToDisk()
     }
 }
 

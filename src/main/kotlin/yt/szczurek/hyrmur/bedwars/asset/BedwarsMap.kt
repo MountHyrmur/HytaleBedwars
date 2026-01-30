@@ -10,6 +10,12 @@ import com.hypixel.hytale.builtin.instances.InstanceValidator
 import com.hypixel.hytale.codec.Codec
 import com.hypixel.hytale.codec.KeyedCodec
 import com.hypixel.hytale.codec.validation.Validators
+import com.hypixel.hytale.server.core.asset.AssetModule
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import yt.szczurek.hyrmur.bedwars.BedwarsPlugin
+import kotlin.io.path.Path
 
 
 class BedwarsMap() : JsonAssetWithMap<String, DefaultAssetMap<String, BedwarsMap>> {
@@ -28,6 +34,19 @@ class BedwarsMap() : JsonAssetWithMap<String, DefaultAssetMap<String, BedwarsMap
 
     override fun getId(): String? {
         return name
+    }
+
+    fun saveToDisk() {
+        val packName = assetMap.getAssetPack(name)!!
+        val pack = AssetModule.get().getAssetPack(packName)
+
+        val map = this
+
+        BedwarsPlugin.get().scope.launch {
+            withContext(Dispatchers.IO) {
+                assetStore.writeAssetToDisk(pack,  mapOf(Path("$name.json") to map))
+            }
+        }
     }
 
     companion object {

@@ -9,6 +9,7 @@ import com.hypixel.hytale.server.core.command.system.basecommands.AbstractPlayer
 import com.hypixel.hytale.server.core.universe.PlayerRef
 import com.hypixel.hytale.server.core.universe.world.World
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore
+import yt.szczurek.hyrmur.bedwars.BedwarsMapManager
 
 class BedwarsMapExitCommand : AbstractPlayerCommand("exit", "server.commands.bedwars.map.exit.desc") {
     override fun execute(
@@ -18,6 +19,7 @@ class BedwarsMapExitCommand : AbstractPlayerCommand("exit", "server.commands.bed
         player: PlayerRef,
         world: World
     ) {
+        BedwarsMapManager.updateMapMetadata(world)
         try {
             InstancesPlugin.exitInstance(ref, store)
             ctx.sendMessage(MESSAGE_EXIT_SUCCESS)
