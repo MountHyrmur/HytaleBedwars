@@ -20,8 +20,8 @@ class BedwarsMapValidateCommand :
         world: World
     ) {
         if (BedwarsMapManager.isABedwarsMapBeingEdited(world)) {
-            val reports = BedwarsMapManager.validateWorld(store)
-            ctx.sendMessage(BedwarsMapManager.validationReportListToMessage(reports))
+            val result = BedwarsMapManager.validateWorld(store)
+            ctx.sendMessage(result.toMessage())
         } else {
             ctx.sendMessage(Message.translation("server.commands.bedwars.map.common.notBwMap"))
         }

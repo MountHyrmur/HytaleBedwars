@@ -172,7 +172,7 @@ object BedwarsMapManager {
         mapsLoadedForEditing.remove(event.world.worldConfig.uuid)
     }
 
-    fun validateWorld(store: Store<EntityStore>): List<ValidationReport> {
+    fun validateWorld(store: Store<EntityStore>): ValidationResult {
         val reports = ArrayList<ValidationReport>()
 
         val teamSpawnpointQuery = Query.and(TeamSpawnpoint.componentType)
@@ -191,7 +191,7 @@ object BedwarsMapManager {
         }
         reports.add(queueSpawnpointReport)
 
-        return reports
+        return ValidationResult(reports)
     }
 
     fun updateMapMetadata(world: World) {
@@ -203,17 +203,6 @@ object BedwarsMapManager {
         val map = BedwarsMap.assetMap.getAsset(assetName) ?: return
         map.teamCount = world.entityStore.store.getEntityCountFor(Query.and(TeamSpawnpoint.componentType))
         map.saveToDisk()
-    }
-
-    fun validationReportListToMessage(reports: List<ValidationReport>): Message {
-        val message = Message.raw("Validation report:\n")
-        for ((i, report) in reports.withIndex()) {
-            message.insert(report.toMessage())
-            if (i != reports.size - 1) {
-                message.insert("\n")
-            }
-        }
-        return message
     }
 }
 
