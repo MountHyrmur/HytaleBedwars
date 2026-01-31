@@ -13,9 +13,7 @@ import com.hypixel.hytale.protocol.Color
 import com.hypixel.hytale.protocol.GameMode
 import com.hypixel.hytale.server.core.Message
 import com.hypixel.hytale.server.core.asset.AssetModule
-import com.hypixel.hytale.server.core.command.system.CommandContext
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent
-import com.hypixel.hytale.server.core.universe.PlayerRef
 import com.hypixel.hytale.server.core.universe.Universe
 import com.hypixel.hytale.server.core.universe.world.World
 import com.hypixel.hytale.server.core.universe.world.WorldConfig
@@ -152,6 +150,10 @@ object BedwarsMapManager {
     }
 
     fun doesMapExist(name: String): Boolean = BedwarsMap.assetMap.getAsset(name) != null
+
+    fun isABedwarsMapBeingEdited(world: World): Boolean {
+        return mapsLoadedForEditing.containsKey(world.worldConfig.uuid)
+    }
 
     fun initializeWorld(world: World) {
         world.setBlock(0, 100, 0, "Soil_Grass")
