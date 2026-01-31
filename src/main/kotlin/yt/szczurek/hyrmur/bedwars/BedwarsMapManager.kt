@@ -168,8 +168,12 @@ object BedwarsMapManager {
     }
 
     fun onWorldRemoveEvent(event: RemoveWorldEvent) {
-        updateMapMetadata(event.world)
-        mapsLoadedForEditing.remove(event.world.worldConfig.uuid)
+        val world = event.world
+        val validationResult = validateWorld(world.entityStore.store)
+        if (validationResult.isOk()) {
+            updateMapMetadata(world)
+        }
+        mapsLoadedForEditing.remove(world.worldConfig.uuid)
     }
 
     fun validateWorld(store: Store<EntityStore>): ValidationResult {
