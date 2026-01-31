@@ -13,7 +13,9 @@ import com.hypixel.hytale.protocol.Color
 import com.hypixel.hytale.protocol.GameMode
 import com.hypixel.hytale.server.core.Message
 import com.hypixel.hytale.server.core.asset.AssetModule
+import com.hypixel.hytale.server.core.command.system.CommandContext
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent
+import com.hypixel.hytale.server.core.universe.PlayerRef
 import com.hypixel.hytale.server.core.universe.Universe
 import com.hypixel.hytale.server.core.universe.world.World
 import com.hypixel.hytale.server.core.universe.world.WorldConfig
@@ -26,6 +28,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.future.await
 import kotlinx.coroutines.withContext
 import yt.szczurek.hyrmur.bedwars.asset.BedwarsMap
+import yt.szczurek.hyrmur.bedwars.component.QueueSpawnpoint
 import yt.szczurek.hyrmur.bedwars.component.TeamSpawnpoint
 import java.io.IOException
 import java.nio.file.Files
@@ -167,6 +170,28 @@ object BedwarsMapManager {
         mapsLoadedForEditing.remove(event.world.worldConfig.uuid)
     }
 
+    fun validateWorld(store: Store<EntityStore>): List<ValidationReport> {
+        val reports = ArrayList<ValidationReport>()
+
+        val teamSpawnpointQuery = Query.and(TeamSpawnpoint.componentType)
+        val teamSpawnpoints = store.getEntityCountFor(teamSpawnpointQuery)
+        val teamSpawnpointReport = ValidationReport("Found $teamSpawnpoints team spawnpoints")
+        if (teamSpawnpoints < 2) {
+            teamSpawnpointReport.addTextError("Map has less then 2 team spawnpoints")
+        }
+        reports.add(teamSpawnpointReport)
+
+        val queueSpawnpointQuery = Query.and(QueueSpawnpoint.componentType)
+        val queueSpawnpoints = store.getEntityCountFor(queueSpawnpointQuery)
+        val queueSpawnpointReport = ValidationReport("Found $queueSpawnpoints queue spawnpoints")
+        if (queueSpawnpoints == 0) {
+            queueSpawnpointReport.addTextError("Map needs at least one queue spawnpoint")
+        }
+        reports.add(queueSpawnpointReport)
+
+        return reports
+    }
+
     fun updateMapMetadata(world: World) {
         val assetName = mapsLoadedForEditing[world.worldConfig.uuid]
         if (assetName == null) {
@@ -176,6 +201,17 @@ object BedwarsMapManager {
         val map = BedwarsMap.assetMap.getAsset(assetName) ?: return
         map.teamCount = world.entityStore.store.getEntityCountFor(Query.and(TeamSpawnpoint.componentType))
         map.saveToDisk()
+    }
+
+    fun validationReportListToMessage(reports: List<ValidationReport>): Message {
+        val message = Message.raw("Validation report:\n")
+        for ((i, report) in reports.withIndex()) {
+            message.insert(report.toMessage())
+            if (i != reports.size - 1) {
+                message.insert("\n")
+            }
+        }
+        return message
     }
 }
 
