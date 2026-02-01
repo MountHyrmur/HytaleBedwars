@@ -24,7 +24,6 @@ import yt.szczurek.hyrmur.bedwars.component.*
 import yt.szczurek.hyrmur.bedwars.interaction.SnapToGridInteraction
 import yt.szczurek.hyrmur.bedwars.page.GeneratorEditorPageSupplier
 import yt.szczurek.hyrmur.bedwars.page.TeamSpawnpointEditorPageSupplier
-import yt.szczurek.hyrmur.bedwars.system.AutoAddNetworkIdSystem
 import yt.szczurek.hyrmur.bedwars.system.GeneratorSystem
 import yt.szczurek.hyrmur.bedwars.system.UpdateGeneratorFromBuilderSystem
 import java.awt.Color
@@ -38,8 +37,6 @@ class BedwarsPlugin(init: JavaPluginInit) : JavaPlugin(init) {
     lateinit var teamSpawnpointComponent: ComponentType<EntityStore, TeamSpawnpoint>
         private set
     lateinit var queueSpawnpointComponent: ComponentType<EntityStore, QueueSpawnpoint>
-        private set
-    lateinit var autoNetworkIdComponent: ComponentType<EntityStore, AutoNetworkId>
         private set
 
     val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
@@ -108,15 +105,8 @@ class BedwarsPlugin(init: JavaPluginInit) : JavaPlugin(init) {
             QueueSpawnpoint.CODEC
         )
 
-        this.autoNetworkIdComponent = entityStoreRegistry.registerComponent(
-            AutoNetworkId::class.java,
-            "AutoNetworkId",
-            AutoNetworkId.CODEC
-        )
-
         entityStoreRegistry.registerSystem(UpdateGeneratorFromBuilderSystem())
         entityStoreRegistry.registerSystem(GeneratorSystem())
-        entityStoreRegistry.registerSystem(AutoAddNetworkIdSystem())
 
         this.getCodecRegistry(Interaction.CODEC)
             .register("SnapToGrid", SnapToGridInteraction::class.java, SnapToGridInteraction.CODEC)
