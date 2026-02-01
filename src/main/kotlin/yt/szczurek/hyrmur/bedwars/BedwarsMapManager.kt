@@ -8,6 +8,7 @@ import com.hypixel.hytale.component.Ref
 import com.hypixel.hytale.component.Store
 import com.hypixel.hytale.component.query.Query
 import com.hypixel.hytale.math.vector.Transform
+import com.hypixel.hytale.math.vector.Vector3d
 import com.hypixel.hytale.math.vector.Vector3i
 import com.hypixel.hytale.protocol.Color
 import com.hypixel.hytale.protocol.GameMode
@@ -26,6 +27,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.future.await
 import kotlinx.coroutines.withContext
 import yt.szczurek.hyrmur.bedwars.asset.BedwarsMap
+import yt.szczurek.hyrmur.bedwars.asset.BedwarsTeam
 import yt.szczurek.hyrmur.bedwars.component.QueueSpawnpoint
 import yt.szczurek.hyrmur.bedwars.component.TeamSpawnpoint
 import java.io.IOException
@@ -189,10 +191,28 @@ object BedwarsMapManager {
         val reports = ArrayList<ValidationReport>()
 
         val teamSpawnpointQuery = Query.and(TeamSpawnpoint.componentType)
-        val teamSpawnpoints = store.getEntityCountFor(teamSpawnpointQuery)
-        val teamSpawnpointReport = ValidationReport("Found $teamSpawnpoints team spawnpoints")
-        if (teamSpawnpoints < 2) {
+        val teamSpawnpointCount = store.getEntityCountFor(teamSpawnpointQuery)
+        val teamSpawnpointReport = ValidationReport("Found $teamSpawnpointCount team spawnpoints")
+        if (teamSpawnpointCount < 2) {
             teamSpawnpointReport.addTextError("Map has less then 2 team spawnpoints")
+        }
+        val teams = HashMap<String, Vector3d>()
+        store.forEachEntityParallel(teamSpawnpointQuery) { i, archetype, _ ->
+            val spawnpoint = archetype.getComponent(i, TeamSpawnpoint.componentType)!!
+            val position = archetype.getComponent(i, TransformComponent.getComponentType())!!.position
+            val formattedPosition = Vector3d.formatShortString(position.clone().floor())
+            val team = spawnpoint.team
+
+            val otherTeamPos = teams[team]
+            if (otherTeamPos != null) {
+                val formattedOtherTeamPos = Vector3d.formatShortString(otherTeamPos.clone().floor())
+                teamSpawnpointReport.addTextError("There are two $team teams: at $formattedPosition and at $formattedOtherTeamPos")
+            }
+            if (team.isEmpty()) {
+                teamSpawnpointReport.addTextError("Team spawnpoint at $formattedPosition has no team set")
+            } else {
+                teams[team] = position
+            }
         }
         reports.add(teamSpawnpointReport)
 
