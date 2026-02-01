@@ -27,6 +27,7 @@ import yt.szczurek.hyrmur.bedwars.page.TeamSpawnpointEditorPageSupplier
 import yt.szczurek.hyrmur.bedwars.system.AutoAddNetworkIdSystem
 import yt.szczurek.hyrmur.bedwars.system.GeneratorSystem
 import yt.szczurek.hyrmur.bedwars.system.UpdateGeneratorFromBuilderSystem
+import java.awt.Color
 
 
 class BedwarsPlugin(init: JavaPluginInit) : JavaPlugin(init) {
@@ -134,6 +135,7 @@ class BedwarsPlugin(init: JavaPluginInit) : JavaPlugin(init) {
 
     companion object {
         val LOGGER: HytaleLogger = HytaleLogger.forEnclosingClass()
+        val RED_COLOR = Color(255, 85, 85);
         private lateinit var instance: BedwarsPlugin
 
         @JvmStatic

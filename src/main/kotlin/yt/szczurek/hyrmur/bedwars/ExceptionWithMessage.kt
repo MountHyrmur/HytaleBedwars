@@ -10,6 +10,6 @@ class ExceptionWithMessage(message: Message, cause: Throwable? = null) : Excepti
             theMessage
         } else {
             theMessage.insert("\nError: ${cause!!.message}")
-        }.color("#ff0000")
+        }.color(BedwarsPlugin.RED_COLOR)
     }
 }

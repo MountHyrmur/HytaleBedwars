@@ -3,8 +3,6 @@ package yt.szczurek.hyrmur.bedwars
 import com.hypixel.hytale.server.core.Message
 import java.awt.Color
 
-private val RED_COLOR = Color(255, 85, 85);
-
 data class ValidationReport(val description: Message, val errors: MutableList<Message> = ArrayList()) {
     constructor(message: String) : this(Message.raw(message))
 
@@ -21,7 +19,7 @@ data class ValidationReport(val description: Message, val errors: MutableList<Me
             description
         } else {
             description.insert("\nErrors:\n").insertAll(errors.map {
-                err -> Message.raw(" • ").insert(err).insert("\n").color(RED_COLOR)
+                err -> Message.raw(" • ").insert(err).insert("\n").color(BedwarsPlugin.RED_COLOR)
             })
         }
     }
