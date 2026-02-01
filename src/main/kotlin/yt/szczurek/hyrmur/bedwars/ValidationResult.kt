@@ -5,7 +5,7 @@ import com.hypixel.hytale.server.core.Message
 data class ValidationResult(val reports: List<ValidationReport>) {
 
     fun isOk(): Boolean {
-        return reports.any { report -> !report.isOk() }
+        return !reports.any { report -> !report.isOk() }
     }
 
     fun toMessage(): Message {
