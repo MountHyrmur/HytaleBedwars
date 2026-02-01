@@ -39,6 +39,7 @@ object BedwarsMapManager {
     val MESSAGE_NO_MUTABLE_PACK = Message.translation("server.commands.bedwars.map.create.noMutablePack")
     val MESSAGE_IO_CREATION_FAILED = Message.translation("server.commands.bedwars.map.createIoFail")
     val MESSAGE_NO_INSTANCE = Message.translation("server.commands.bedwars.map.edit.fail.noInstance")
+    val MESSAGE_NOT_BW_MAP = Message.translation("server.commands.bedwars.map.common.notBwMap")
 
     private val mapsLoadedForEditing: HashMap<UUID, String> = HashMap()
 
@@ -169,11 +170,19 @@ object BedwarsMapManager {
 
     fun onWorldRemoveEvent(event: RemoveWorldEvent) {
         val world = event.world
-        val validationResult = validateWorld(world.entityStore.store)
-        if (validationResult.isOk()) {
-            updateMapMetadata(world)
+        if (!isABedwarsMapBeingEdited(world) || event.removalReason == RemoveWorldEvent.RemovalReason.EXCEPTIONAL) {
+            return
         }
-        mapsLoadedForEditing.remove(world.worldConfig.uuid)
+        world.execute {
+            validateAndUpdateMetadata(world)
+            mapsLoadedForEditing.remove(world.worldConfig.uuid)
+        }
+    }
+
+    fun validateAndUpdateMetadata(world: World): ValidationResult {
+        val result = validateWorld(world.entityStore.store)
+        updateMapMetadata(world, result.isOk())
+        return result
     }
 
     fun validateWorld(store: Store<EntityStore>): ValidationResult {
@@ -198,7 +207,7 @@ object BedwarsMapManager {
         return ValidationResult(reports)
     }
 
-    fun updateMapMetadata(world: World) {
+    fun updateMapMetadata(world: World, playable: Boolean) {
         val assetName = mapsLoadedForEditing[world.worldConfig.uuid]
         if (assetName == null) {
             BedwarsPlugin.LOGGER.atWarning().log("Called updateMapMetadata for world ${world.name} which isn't being edited")
@@ -206,6 +215,7 @@ object BedwarsMapManager {
         }
         val map = BedwarsMap.assetMap.getAsset(assetName) ?: return
         map.teamCount = world.entityStore.store.getEntityCountFor(Query.and(TeamSpawnpoint.componentType))
+        map.playable = playable
         map.saveToDisk()
     }
 }

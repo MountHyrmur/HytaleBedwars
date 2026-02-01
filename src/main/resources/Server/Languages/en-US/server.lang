@@ -17,6 +17,7 @@ commands.bedwars.map.list.header = Maps
 commands.bedwars.map.arg.name = The name of the map to edit
 commands.bedwars.map.exit.desc = Exit the current bedwars map
 commands.bedwars.map.exit.success = Exited the map
+commands.bedwars.map.exit.warnNotValid = Warning! This map isn't ready to be played. Run /bw map validate while editing it to see what's wrong
 commands.bedwars.map.createIoFail = Failed to create file/directory
 commands.bedwars.map.validate.desc = Validate the bedwars map currently being edited
 commands.bedwars.spawn.desc = Spawn shopkeepers and generators

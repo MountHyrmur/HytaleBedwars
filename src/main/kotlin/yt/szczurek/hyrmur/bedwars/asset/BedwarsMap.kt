@@ -24,7 +24,8 @@ class BedwarsMap() : JsonAssetWithMap<String, DefaultAssetMap<String, BedwarsMap
     private var data: AssetExtraInfo.Data? = null
     var displayName: String? = null
     var instance: String? = null
-    var teamCount: Int? = null
+    var playable: Boolean = false
+    var teamCount: Int = 0
 
     constructor(name: String) : this() {
         this.displayName = name
@@ -60,21 +61,26 @@ class BedwarsMap() : JsonAssetWithMap<String, DefaultAssetMap<String, BedwarsMap
             { asset -> asset.data }).append(
                 KeyedCodec(
                 "DisplayName", Codec.STRING
-            ), { team, string -> team.displayName = string }, { team -> team.displayName })
+            ), { map, string -> map.displayName = string }, { map -> map.displayName })
             .addValidator(Validators.nonEmptyString())
             .add()
             .append(
                 KeyedCodec("Instance", Codec.STRING),
-                { team, instance -> team.instance = instance },
-                { team -> team.instance })
+                { map, instance -> map.instance = instance },
+                { map -> map.instance })
             .addValidator(Validators.nonNull())
             .addValidator(InstanceValidator.INSTANCE)
             .add()
             .append(
+                KeyedCodec("Playable", Codec.BOOLEAN),
+                { map, playable -> map.playable = playable },
+                { map -> map.playable })
+            .addValidator(Validators.nonNull())
+            .add()
+            .append(
                 KeyedCodec("TeamCount", Codec.INTEGER),
-                { team, teamCount -> team.teamCount = teamCount },
-                { team -> team.teamCount })
-            .addValidator(Validators.greaterThan(0))
+                { map, teamCount -> map.teamCount = teamCount },
+                { map -> map.teamCount })
             .add()
             .build()
 

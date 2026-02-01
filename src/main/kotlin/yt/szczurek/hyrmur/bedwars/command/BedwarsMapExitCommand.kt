@@ -19,16 +19,25 @@ class BedwarsMapExitCommand : AbstractPlayerCommand("exit", "server.commands.bed
         player: PlayerRef,
         world: World
     ) {
-        BedwarsMapManager.updateMapMetadata(world)
+        if (!BedwarsMapManager.isABedwarsMapBeingEdited(world)) {
+            ctx.sendMessage(BedwarsMapManager.MESSAGE_NOT_BW_MAP)
+            return
+        }
+
+        val result = BedwarsMapManager.validateAndUpdateMetadata(world)
+
         try {
             InstancesPlugin.exitInstance(ref, store)
             ctx.sendMessage(MESSAGE_EXIT_SUCCESS)
+            if (!result.isOk()) {
+                ctx.sendMessage(MESSAGE_WARN_NOT_VALID)
+            }
         } catch (_: IllegalArgumentException) {
-            ctx.sendMessage(MESSAGE_EXIT_FAIL)
+            ctx.sendMessage(BedwarsMapManager.MESSAGE_NOT_BW_MAP)
         }
     }
     companion object {
         val MESSAGE_EXIT_SUCCESS = Message.translation("server.commands.bedwars.map.exit.success")
-        val MESSAGE_EXIT_FAIL = Message.translation("server.commands.bedwars.map.exit.fail")
+        val MESSAGE_WARN_NOT_VALID = Message.translation("server.commands.bedwars.map.exit.warnNotValid")
     }
 }
