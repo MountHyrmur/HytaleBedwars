@@ -152,6 +152,11 @@ object BedwarsMapManager {
 
     }
 
+    suspend fun loadForPlaying(map: BedwarsMap, returnTransform: Transform, returnWorld: World): World {
+        val instance = map.instance!!
+        return InstancesPlugin.get().spawnInstance(instance, returnWorld, returnTransform).await()
+    }
+
     fun doesMapExist(name: String): Boolean = BedwarsMap.assetMap.getAsset(name) != null
 
     fun isABedwarsMapBeingEdited(world: World): Boolean {

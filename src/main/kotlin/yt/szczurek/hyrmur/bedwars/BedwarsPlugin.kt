@@ -4,18 +4,21 @@ import com.hypixel.hytale.assetstore.AssetRegistry
 import com.hypixel.hytale.assetstore.map.DefaultAssetMap
 import com.hypixel.hytale.component.ComponentType
 import com.hypixel.hytale.logger.HytaleLogger
+import com.hypixel.hytale.math.vector.Transform
 import com.hypixel.hytale.server.core.asset.HytaleAssetStore
 import com.hypixel.hytale.server.core.asset.type.item.config.Item
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.server.OpenCustomUIInteraction
 import com.hypixel.hytale.server.core.plugin.JavaPlugin
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit
+import com.hypixel.hytale.server.core.universe.world.World
 import com.hypixel.hytale.server.core.universe.world.events.RemoveWorldEvent
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.future.future
 import yt.szczurek.hyrmur.bedwars.asset.BedwarsGenerator
 import yt.szczurek.hyrmur.bedwars.asset.BedwarsMap
 import yt.szczurek.hyrmur.bedwars.asset.BedwarsTeam
@@ -27,6 +30,7 @@ import yt.szczurek.hyrmur.bedwars.page.TeamSpawnpointEditorPageSupplier
 import yt.szczurek.hyrmur.bedwars.system.GeneratorSystem
 import yt.szczurek.hyrmur.bedwars.system.UpdateGeneratorFromBuilderSystem
 import java.awt.Color
+import java.util.concurrent.CompletableFuture
 
 
 class BedwarsPlugin(init: JavaPluginInit) : JavaPlugin(init) {
@@ -131,8 +135,8 @@ class BedwarsPlugin(init: JavaPluginInit) : JavaPlugin(init) {
         @JvmStatic
         fun get(): BedwarsPlugin = instance
 
-        fun createGame(mapName: String): BedwarsGame {
-            return BedwarsGame.initialize(mapName)
+        fun createGame(mapName: String, returnTransform: Transform, returnWorld: World): CompletableFuture<BedwarsGame> {
+            return get().scope.future { BedwarsGame.initialize(mapName, returnTransform, returnWorld) }
         }
     }
 }
