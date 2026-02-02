@@ -8,6 +8,7 @@ class BedwarsCommand : AbstractCommandCollection("bedwars", "server.commands.bed
         this.addSubCommand(BedwarsMapCommand())
         this.addSubCommand(BedwarsSpawnCommand())
         this.addSubCommand(BedwarsDevCommand())
+        this.addSubCommand(BedwarsStartgameCommand())
     }
 
     class BedwarsMapCommand : AbstractCommandCollection("map", "server.commands.bedwars.map.desc") {
