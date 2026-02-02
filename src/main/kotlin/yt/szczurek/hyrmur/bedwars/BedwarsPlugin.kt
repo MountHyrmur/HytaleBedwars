@@ -130,5 +130,9 @@ class BedwarsPlugin(init: JavaPluginInit) : JavaPlugin(init) {
 
         @JvmStatic
         fun get(): BedwarsPlugin = instance
+
+        fun createGame(mapName: String): BedwarsGame {
+            return BedwarsGame.initialize(mapName)
+        }
     }
 }
