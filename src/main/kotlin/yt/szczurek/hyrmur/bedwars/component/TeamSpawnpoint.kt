@@ -6,7 +6,7 @@ import com.hypixel.hytale.codec.builder.BuilderCodec
 import com.hypixel.hytale.component.Component
 import com.hypixel.hytale.component.ComponentType
 import com.hypixel.hytale.component.Holder
-import com.hypixel.hytale.component.Store
+import com.hypixel.hytale.component.query.Query
 import com.hypixel.hytale.math.vector.Vector3d
 import com.hypixel.hytale.protocol.InteractionType
 import com.hypixel.hytale.server.core.modules.entity.component.Interactable
@@ -39,6 +39,9 @@ class TeamSpawnpoint : Component<EntityStore?> {
 
         val componentType: ComponentType<EntityStore, TeamSpawnpoint>
             get() = BedwarsPlugin.get().teamSpawnpointComponent
+
+        val query: Query<EntityStore?>
+            get() = Query.and(componentType)
 
         fun createTeamSpawnpoint(pos: Vector3d): Holder<EntityStore> {
             val holder: Holder<EntityStore> = EntityUtil.createUtilityEntity(pos, "Bedwars_Team_Spawnpoint")

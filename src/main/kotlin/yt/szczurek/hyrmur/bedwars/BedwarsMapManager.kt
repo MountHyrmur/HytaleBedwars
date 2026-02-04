@@ -7,6 +7,7 @@ import com.hypixel.hytale.builtin.instances.removal.IdleTimeoutCondition
 import com.hypixel.hytale.component.Ref
 import com.hypixel.hytale.component.Store
 import com.hypixel.hytale.component.query.Query
+import com.hypixel.hytale.math.util.ChunkUtil
 import com.hypixel.hytale.math.vector.Transform
 import com.hypixel.hytale.math.vector.Vector3d
 import com.hypixel.hytale.math.vector.Vector3i
@@ -27,7 +28,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.future.await
 import kotlinx.coroutines.withContext
 import yt.szczurek.hyrmur.bedwars.asset.BedwarsMap
-import yt.szczurek.hyrmur.bedwars.asset.BedwarsTeam
 import yt.szczurek.hyrmur.bedwars.component.QueueSpawnpoint
 import yt.szczurek.hyrmur.bedwars.component.TeamSpawnpoint
 import java.io.IOException
@@ -175,6 +175,14 @@ object BedwarsMapManager {
         InstancesPlugin.teleportPlayerToInstance(player, store, targetWorld, transform)
     }
 
+    fun loadChunks(radius: Int, world: World) {
+        for (x in -radius..radius) {
+            for (z in -radius..radius) {
+                world.getChunk(ChunkUtil.indexChunk(x, z))
+            }
+        }
+    }
+
     fun onWorldRemoveEvent(event: RemoveWorldEvent) {
         val world = event.world
         if (!isABedwarsMapBeingEdited(world) || event.removalReason == RemoveWorldEvent.RemovalReason.EXCEPTIONAL) {
@@ -187,22 +195,24 @@ object BedwarsMapManager {
     }
 
     fun validateAndUpdateMetadata(world: World): ValidationResult {
+        val mapName = mapsLoadedForEditing[world.worldConfig.uuid]!!
+        val map = BedwarsMap.assetMap.getAsset(mapName)!!
+        loadChunks(map.chunkLoadRadius, world)
         val result = validateWorld(world.entityStore.store)
-        updateMapMetadata(world, result.isOk())
+        updateMapMetadata(world, result.isOk(), map)
         return result
     }
 
     fun validateWorld(store: Store<EntityStore>): ValidationResult {
         val reports = ArrayList<ValidationReport>()
 
-        val teamSpawnpointQuery = Query.and(TeamSpawnpoint.componentType)
-        val teamSpawnpointCount = store.getEntityCountFor(teamSpawnpointQuery)
+        val teamSpawnpointCount = store.getEntityCountFor(TeamSpawnpoint.query)
         val teamSpawnpointReport = ValidationReport("Found $teamSpawnpointCount team spawnpoints")
         if (teamSpawnpointCount < 2) {
             teamSpawnpointReport.addTextError("Map has less then 2 team spawnpoints")
         }
         val teams = HashMap<String, Vector3d>()
-        store.forEachEntityParallel(teamSpawnpointQuery) { i, archetype, _ ->
+        store.forEachEntityParallel(TeamSpawnpoint.query) { i, archetype, _ ->
             val spawnpoint = archetype.getComponent(i, TeamSpawnpoint.componentType)!!
             val position = archetype.getComponent(i, TransformComponent.getComponentType())!!.position
             val formattedPosition = Vector3d.formatShortString(position.clone().floor())
@@ -221,8 +231,7 @@ object BedwarsMapManager {
         }
         reports.add(teamSpawnpointReport)
 
-        val queueSpawnpointQuery = Query.and(QueueSpawnpoint.componentType)
-        val queueSpawnpoints = store.getEntityCountFor(queueSpawnpointQuery)
+        val queueSpawnpoints = store.getEntityCountFor(QueueSpawnpoint.query)
         val queueSpawnpointReport = ValidationReport("Found $queueSpawnpoints queue spawnpoints")
         if (queueSpawnpoints == 0) {
             queueSpawnpointReport.addTextError("Map needs at least one queue spawnpoint")
@@ -232,13 +241,7 @@ object BedwarsMapManager {
         return ValidationResult(reports)
     }
 
-    fun updateMapMetadata(world: World, playable: Boolean) {
-        val assetName = mapsLoadedForEditing[world.worldConfig.uuid]
-        if (assetName == null) {
-            BedwarsPlugin.LOGGER.atWarning().log("Called updateMapMetadata for world ${world.name} which isn't being edited")
-            return
-        }
-        val map = BedwarsMap.assetMap.getAsset(assetName) ?: return
+    fun updateMapMetadata(world: World, playable: Boolean, map: BedwarsMap) {
         map.teamCount = world.entityStore.store.getEntityCountFor(Query.and(TeamSpawnpoint.componentType))
         map.playable = playable
         map.saveToDisk()

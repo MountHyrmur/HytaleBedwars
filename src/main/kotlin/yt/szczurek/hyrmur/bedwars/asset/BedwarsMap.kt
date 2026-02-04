@@ -24,6 +24,7 @@ class BedwarsMap() : JsonAssetWithMap<String, DefaultAssetMap<String, BedwarsMap
     private var data: AssetExtraInfo.Data? = null
     var displayName: String? = null
     var instance: String? = null
+    var chunkLoadRadius: Int = 6
     var playable: Boolean = false
     var teamCount: Int = 0
 
@@ -70,6 +71,12 @@ class BedwarsMap() : JsonAssetWithMap<String, DefaultAssetMap<String, BedwarsMap
                 { map -> map.instance })
             .addValidator(Validators.nonNull())
             .addValidator(InstanceValidator.INSTANCE)
+            .add()
+            .append(
+                KeyedCodec("ChunkLoadRadius", Codec.INTEGER),
+                { map, chunkLoadRadius -> map.chunkLoadRadius = chunkLoadRadius },
+                { map -> map.chunkLoadRadius })
+            .addValidator(Validators.range(4, 24))
             .add()
             .append(
                 KeyedCodec("Playable", Codec.BOOLEAN),
