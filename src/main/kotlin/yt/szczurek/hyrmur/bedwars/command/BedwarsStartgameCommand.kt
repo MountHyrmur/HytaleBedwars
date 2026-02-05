@@ -22,11 +22,12 @@ class BedwarsStartgameCommand: AbstractPlayerCommand("startgame", "server.comman
         world: World
     ) {
         val transform = store.getComponent(ref, TransformComponent.getComponentType())!!
-        val playerRef = store.getComponent(ref, PlayerRef.getComponentType())!!
         ctx.sendMessage(MESSAGE_START_START)
         BedwarsPlugin.get().scope.launch {
             val game = BedwarsPlugin.createGame("Forest", transform.transform, world).await()
-            game.addPlayer(playerRef)
+            world.execute {
+                game.addPlayer(ref, store)
+            }
             ctx.sendMessage(MESSAGE_START_END)
         }
     }

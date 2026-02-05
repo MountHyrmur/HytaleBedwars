@@ -13,6 +13,7 @@ import com.hypixel.hytale.server.core.plugin.JavaPlugin
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit
 import com.hypixel.hytale.server.core.universe.world.World
 import com.hypixel.hytale.server.core.universe.world.events.RemoveWorldEvent
+import com.hypixel.hytale.server.core.universe.world.spawn.ISpawnProvider
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -23,7 +24,10 @@ import yt.szczurek.hyrmur.bedwars.asset.BedwarsGenerator
 import yt.szczurek.hyrmur.bedwars.asset.BedwarsMap
 import yt.szczurek.hyrmur.bedwars.asset.BedwarsTeam
 import yt.szczurek.hyrmur.bedwars.command.BedwarsCommand
-import yt.szczurek.hyrmur.bedwars.component.*
+import yt.szczurek.hyrmur.bedwars.component.Generator
+import yt.szczurek.hyrmur.bedwars.component.GeneratorBuilder
+import yt.szczurek.hyrmur.bedwars.component.QueueSpawnpoint
+import yt.szczurek.hyrmur.bedwars.component.TeamSpawnpoint
 import yt.szczurek.hyrmur.bedwars.interaction.SnapToGridInteraction
 import yt.szczurek.hyrmur.bedwars.page.GeneratorEditorPageSupplier
 import yt.szczurek.hyrmur.bedwars.page.TeamSpawnpointEditorPageSupplier
@@ -120,6 +124,8 @@ class BedwarsPlugin(init: JavaPluginInit) : JavaPlugin(init) {
         this.getCodecRegistry(OpenCustomUIInteraction.PAGE_CODEC)
             .register("TeamSpawnpointEditor", TeamSpawnpointEditorPageSupplier::class.java, TeamSpawnpointEditorPageSupplier.CODEC)
 
+        ISpawnProvider.CODEC.register("Bedwars", BedwarsGameSpawnProvider::class.java, BedwarsGameSpawnProvider.CODEC)
+
         this.eventRegistry.registerGlobal(RemoveWorldEvent::class.java, BedwarsMapManager::onWorldRemoveEvent)
     }
 
@@ -129,7 +135,7 @@ class BedwarsPlugin(init: JavaPluginInit) : JavaPlugin(init) {
 
     companion object {
         val LOGGER: HytaleLogger = HytaleLogger.forEnclosingClass()
-        val RED_COLOR = Color(255, 85, 85);
+        val RED_COLOR = Color(255, 85, 85)
         private lateinit var instance: BedwarsPlugin
 
         @JvmStatic
