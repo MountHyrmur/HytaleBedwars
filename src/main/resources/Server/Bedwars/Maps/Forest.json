@@ -1,1 +1,1 @@
-{"Tags": {}, "DisplayName": "Forest", "Instance": "Forest", "Playable": true, "TeamCount": 4}
+{"Tags": {}, "DisplayName": "Forest", "Instance": "Forest", "ChunkLoadRadius": 6, "Playable": true, "TeamCount": 4}
