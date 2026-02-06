@@ -3,6 +3,7 @@ package yt.szczurek.hyrmur.bedwars
 import com.hypixel.hytale.builtin.instances.InstancesPlugin
 import com.hypixel.hytale.component.ComponentAccessor
 import com.hypixel.hytale.component.Ref
+import com.hypixel.hytale.component.Store
 import com.hypixel.hytale.math.vector.Transform
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent
 import com.hypixel.hytale.server.core.universe.PlayerRef
@@ -37,6 +38,7 @@ class BedwarsGame(val mapAsset: BedwarsMap, val world: World) {
     private fun worldInit() {
         BedwarsMapManager.loadChunks(mapAsset.chunkLoadRadius, world)
         val store = world.entityStore.store
+        store.getResource(BedwarsGameHolder.resourceType).game = this
 
         val queueSpawnpoints = ArrayList<Transform>()
 
@@ -65,6 +67,10 @@ class BedwarsGame(val mapAsset: BedwarsMap, val world: World) {
             game.init()
 
             return game
+        }
+
+        fun get(store: Store<EntityStore>): BedwarsGame? {
+            return store.getResource(BedwarsGameHolder.resourceType).game
         }
     }
 }

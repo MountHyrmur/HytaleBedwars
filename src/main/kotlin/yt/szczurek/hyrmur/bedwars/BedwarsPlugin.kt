@@ -3,6 +3,7 @@ package yt.szczurek.hyrmur.bedwars
 import com.hypixel.hytale.assetstore.AssetRegistry
 import com.hypixel.hytale.assetstore.map.DefaultAssetMap
 import com.hypixel.hytale.component.ComponentType
+import com.hypixel.hytale.component.ResourceType
 import com.hypixel.hytale.logger.HytaleLogger
 import com.hypixel.hytale.math.vector.Transform
 import com.hypixel.hytale.server.core.asset.HytaleAssetStore
@@ -45,6 +46,8 @@ class BedwarsPlugin(init: JavaPluginInit) : JavaPlugin(init) {
     lateinit var teamSpawnpointComponent: ComponentType<EntityStore, TeamSpawnpoint>
         private set
     lateinit var queueSpawnpointComponent: ComponentType<EntityStore, QueueSpawnpoint>
+        private set
+    lateinit var bedwarsGameHolderResourceType: ResourceType<EntityStore, BedwarsGameHolder>
         private set
 
     val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
@@ -112,6 +115,8 @@ class BedwarsPlugin(init: JavaPluginInit) : JavaPlugin(init) {
             "QueueSpawnpoint",
             QueueSpawnpoint.CODEC
         )
+
+        this.bedwarsGameHolderResourceType = entityStoreRegistry.registerResource(BedwarsGameHolder::class.java, ::BedwarsGameHolder)
 
         entityStoreRegistry.registerSystem(UpdateGeneratorFromBuilderSystem())
         entityStoreRegistry.registerSystem(GeneratorSystem())
