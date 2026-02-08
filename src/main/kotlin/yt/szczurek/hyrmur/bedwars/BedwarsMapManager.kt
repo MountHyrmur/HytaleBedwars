@@ -3,7 +3,8 @@ package yt.szczurek.hyrmur.bedwars
 import com.hypixel.hytale.assetstore.AssetPack
 import com.hypixel.hytale.builtin.instances.InstancesPlugin
 import com.hypixel.hytale.builtin.instances.config.InstanceWorldConfig
-import com.hypixel.hytale.builtin.instances.removal.IdleTimeoutCondition
+import com.hypixel.hytale.builtin.instances.removal.InstanceDataResource
+import com.hypixel.hytale.builtin.instances.removal.WorldEmptyCondition
 import com.hypixel.hytale.component.Ref
 import com.hypixel.hytale.component.Store
 import com.hypixel.hytale.component.query.Query
@@ -33,6 +34,7 @@ import yt.szczurek.hyrmur.bedwars.component.TeamSpawnpoint
 import java.io.IOException
 import java.nio.file.Files
 import java.util.*
+import java.util.concurrent.CompletableFuture
 import kotlin.io.path.Path
 import kotlin.io.path.div
 
@@ -129,7 +131,7 @@ object BedwarsMapManager {
         config.isTicking = false
         config.gameMode = GameMode.Creative
         config.isDeleteOnRemove = false
-        InstanceWorldConfig.ensureAndGet(config).setRemovalConditions(IdleTimeoutCondition())
+        InstanceWorldConfig.ensureAndGet(config).setRemovalConditions(WorldEmptyCondition())
         config.markChanged()
         val worldName = getWorldNameForEditing(name)
         val world = universe.makeWorld(worldName, path, config).await()
@@ -188,10 +190,18 @@ object BedwarsMapManager {
         if (!isABedwarsMapBeingEdited(world) || event.removalReason == RemoveWorldEvent.RemovalReason.EXCEPTIONAL) {
             return
         }
+        // Instance data needs to be set before the event finishes
+        // so that it gets saved
+        val threadBlockade = CompletableFuture<Unit>()
         world.execute {
             validateAndUpdateMetadata(world)
+            val instanceData = world.chunkStore.store.getResource(InstanceDataResource.getResourceType())
+            instanceData.worldTimeoutTimer = null
+            instanceData.setHadPlayer(false)
             mapsLoadedForEditing.remove(world.worldConfig.uuid)
+            threadBlockade.complete(Unit)
         }
+        threadBlockade.get()
     }
 
     fun validateAndUpdateMetadata(world: World): ValidationResult {
@@ -247,5 +257,4 @@ object BedwarsMapManager {
         map.saveToDisk()
     }
 }
-
 

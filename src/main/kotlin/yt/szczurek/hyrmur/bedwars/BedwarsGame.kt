@@ -1,6 +1,8 @@
 package yt.szczurek.hyrmur.bedwars
 
 import com.hypixel.hytale.builtin.instances.InstancesPlugin
+import com.hypixel.hytale.builtin.instances.config.InstanceWorldConfig
+import com.hypixel.hytale.builtin.instances.removal.WorldEmptyCondition
 import com.hypixel.hytale.component.ComponentAccessor
 import com.hypixel.hytale.component.Ref
 import com.hypixel.hytale.component.Store
@@ -49,6 +51,9 @@ class BedwarsGame(val mapAsset: BedwarsMap, val world: World) {
 
         val worldConfig = world.worldConfig
         worldConfig.spawnProvider = BedwarsGameSpawnProvider(queueSpawnpoints.toTypedArray())
+        worldConfig.isDeleteOnRemove = true
+        worldConfig.isDeleteOnUniverseStart = true
+        InstanceWorldConfig.ensureAndGet(worldConfig).setRemovalConditions(WorldEmptyCondition(30.0))
         worldConfig.markChanged()
     }
 
