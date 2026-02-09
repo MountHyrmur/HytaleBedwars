@@ -5,6 +5,7 @@ import com.hypixel.hytale.builtin.instances.config.InstanceWorldConfig
 import com.hypixel.hytale.builtin.instances.removal.WorldEmptyCondition
 import com.hypixel.hytale.component.ComponentAccessor
 import com.hypixel.hytale.component.Ref
+import com.hypixel.hytale.component.RemoveReason
 import com.hypixel.hytale.component.Store
 import com.hypixel.hytale.math.vector.Transform
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent
@@ -44,9 +45,10 @@ class BedwarsGame(val mapAsset: BedwarsMap, val world: World) {
 
         val queueSpawnpoints = ArrayList<Transform>()
 
-        store.forEachEntityParallel(QueueSpawnpoint.query) { i, chunk, _ ->
+        store.forEachEntityParallel(QueueSpawnpoint.query) { i, chunk, commandBuffer ->
             val transform = chunk.getComponent(i, TransformComponent.getComponentType())!!
             queueSpawnpoints.add(transform.transform)
+            commandBuffer.removeEntity(chunk.getReferenceTo(i), RemoveReason.REMOVE)
         }
 
         val worldConfig = world.worldConfig
