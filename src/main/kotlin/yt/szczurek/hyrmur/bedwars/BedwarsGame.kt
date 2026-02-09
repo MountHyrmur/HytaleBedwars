@@ -53,6 +53,8 @@ class BedwarsGame(val mapAsset: BedwarsMap, val world: World) {
         worldConfig.spawnProvider = BedwarsGameSpawnProvider(queueSpawnpoints.toTypedArray())
         worldConfig.isDeleteOnRemove = true
         worldConfig.isDeleteOnUniverseStart = true
+        worldConfig.isSavingPlayers = false
+        worldConfig.setCanSaveChunks(false)
         InstanceWorldConfig.ensureAndGet(worldConfig).setRemovalConditions(WorldEmptyCondition(30.0))
         worldConfig.markChanged()
     }
