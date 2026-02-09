@@ -40,9 +40,6 @@ class TeamSpawnpoint : Component<EntityStore?> {
         val componentType: ComponentType<EntityStore, TeamSpawnpoint>
             get() = BedwarsPlugin.get().teamSpawnpointComponent
 
-        val query: Query<EntityStore?>
-            get() = Query.and(componentType)
-
         fun createTeamSpawnpoint(pos: Vector3d): Holder<EntityStore> {
             val holder: Holder<EntityStore> = EntityUtil.createUtilityEntity(pos, "Bedwars_Team_Spawnpoint")
             holder.addComponent(componentType, TeamSpawnpoint())

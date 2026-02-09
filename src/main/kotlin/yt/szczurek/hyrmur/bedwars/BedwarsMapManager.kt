@@ -216,13 +216,13 @@ object BedwarsMapManager {
     fun validateWorld(store: Store<EntityStore>): ValidationResult {
         val reports = ArrayList<ValidationReport>()
 
-        val teamSpawnpointCount = store.getEntityCountFor(TeamSpawnpoint.query)
+        val teamSpawnpointCount = store.getEntityCountFor(TeamSpawnpoint.componentType)
         val teamSpawnpointReport = ValidationReport("Found $teamSpawnpointCount team spawnpoints")
         if (teamSpawnpointCount < 2) {
             teamSpawnpointReport.addTextError("Map has less then 2 team spawnpoints")
         }
         val teams = HashMap<String, Vector3d>()
-        store.forEachEntityParallel(TeamSpawnpoint.query) { i, archetype, _ ->
+        store.forEachEntityParallel(TeamSpawnpoint.componentType) { i, archetype, _ ->
             val spawnpoint = archetype.getComponent(i, TeamSpawnpoint.componentType)!!
             val position = archetype.getComponent(i, TransformComponent.getComponentType())!!.position
             val formattedPosition = Vector3d.formatShortString(position.clone().floor())
@@ -241,7 +241,7 @@ object BedwarsMapManager {
         }
         reports.add(teamSpawnpointReport)
 
-        val queueSpawnpoints = store.getEntityCountFor(QueueSpawnpoint.query)
+        val queueSpawnpoints = store.getEntityCountFor(QueueSpawnpoint.componentType)
         val queueSpawnpointReport = ValidationReport("Found $queueSpawnpoints queue spawnpoints")
         if (queueSpawnpoints == 0) {
             queueSpawnpointReport.addTextError("Map needs at least one queue spawnpoint")

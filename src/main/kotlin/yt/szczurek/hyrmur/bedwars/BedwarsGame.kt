@@ -45,7 +45,7 @@ class BedwarsGame(val mapAsset: BedwarsMap, val world: World) {
 
         val queueSpawnpoints = ArrayList<Transform>()
 
-        store.forEachEntityParallel(QueueSpawnpoint.query) { i, chunk, commandBuffer ->
+        store.forEachEntityParallel(QueueSpawnpoint.componentType) { i, chunk, commandBuffer ->
             val transform = chunk.getComponent(i, TransformComponent.getComponentType())!!
             queueSpawnpoints.add(transform.transform)
             commandBuffer.removeEntity(chunk.getReferenceTo(i), RemoveReason.REMOVE)

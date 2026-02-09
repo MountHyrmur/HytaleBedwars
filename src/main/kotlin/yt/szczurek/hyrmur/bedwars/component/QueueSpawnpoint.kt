@@ -15,8 +15,6 @@ object QueueSpawnpoint : Component<EntityStore?> {
         BuilderCodec.builder(QueueSpawnpoint::class.java) { QueueSpawnpoint }.build()
     val componentType: ComponentType<EntityStore, QueueSpawnpoint>
         get() = BedwarsPlugin.get().queueSpawnpointComponent
-    val query: Query<EntityStore?>
-        get() = Query.and(componentType)
 
     override fun clone(): Component<EntityStore?> {
         return this
