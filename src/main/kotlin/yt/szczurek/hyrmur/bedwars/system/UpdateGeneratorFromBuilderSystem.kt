@@ -48,7 +48,7 @@ class UpdateGeneratorFromBuilderSystem : RefChangeSystem<EntityStore, GeneratorB
     ) {
     }
 
-    override fun getQuery(): Query<EntityStore?>? {
+    override fun getQuery(): Query<EntityStore?> {
         return generatorComponentType
     }
 }

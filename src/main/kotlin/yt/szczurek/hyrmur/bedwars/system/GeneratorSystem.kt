@@ -38,6 +38,6 @@ class GeneratorSystem : EntityTickingSystem<EntityStore?>() {
 
     @Nonnull
     override fun getQuery(): Query<EntityStore?> {
-        return Query.and(this.generatorComponentType)
+        return this.generatorComponentType
     }
 }

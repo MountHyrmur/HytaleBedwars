@@ -7,7 +7,6 @@ import com.hypixel.hytale.builtin.instances.removal.InstanceDataResource
 import com.hypixel.hytale.builtin.instances.removal.WorldEmptyCondition
 import com.hypixel.hytale.component.Ref
 import com.hypixel.hytale.component.Store
-import com.hypixel.hytale.component.query.Query
 import com.hypixel.hytale.math.util.ChunkUtil
 import com.hypixel.hytale.math.vector.Transform
 import com.hypixel.hytale.math.vector.Vector3d
@@ -252,7 +251,7 @@ object BedwarsMapManager {
     }
 
     fun updateMapMetadata(world: World, playable: Boolean, map: BedwarsMap) {
-        map.teamCount = world.entityStore.store.getEntityCountFor(Query.and(TeamSpawnpoint.componentType))
+        map.teamCount = world.entityStore.store.getEntityCountFor(TeamSpawnpoint.componentType)
         map.playable = playable
         map.saveToDisk()
     }
