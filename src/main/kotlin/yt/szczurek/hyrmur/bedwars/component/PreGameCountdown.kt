@@ -3,7 +3,10 @@ package yt.szczurek.hyrmur.bedwars.component
 import com.hypixel.hytale.component.*
 import com.hypixel.hytale.component.query.Query
 import com.hypixel.hytale.component.system.tick.DelayedEntitySystem
+import com.hypixel.hytale.protocol.SoundCategory
 import com.hypixel.hytale.server.core.Message
+import com.hypixel.hytale.server.core.asset.type.soundevent.config.SoundEvent
+import com.hypixel.hytale.server.core.universe.world.SoundUtil
 import com.hypixel.hytale.server.core.universe.world.World
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore
 import com.hypixel.hytale.server.core.util.EventTitleUtil
@@ -18,6 +21,8 @@ private val MESSAGE_COUNTDOWN_CHAT = Message.translation("server.bedwars.pregame
 private val MESSAGE_START_CANCELLED_TITLE = Message.translation("server.bedwars.pregame.startCancelled.primaryTitle")
 private val MESSAGE_START_CANCELLED_SUBTITLE = Message.translation("server.bedwars.pregame.startCancelled.secondaryTitle")
 private val MESSAGE_START_CANCELLED_CHAT = Message.translation("server.bedwars.pregame.startCancelled.chatMessage")
+private const val SOUND_COUNTDOWN = "SFX_Avatar_Powers_Disable"
+private const val SOUND_CANCEL = "SFX_Creative_Play_Error"
 
 class PreGameCountdown(val requiredPlayers: Int) : Component<EntityStore> {
     var countdown: Float = DEFAULT_COUNTDOWN_SECONDS
@@ -43,7 +48,7 @@ class PreGameCountdown(val requiredPlayers: Int) : Component<EntityStore> {
                 remaining = component.countdown.roundToInt()
 
                 if (remaining in MESSAGE_TIMES_WHITELIST) {
-                    sendMessageCountdown(remaining, store, world)
+                    notifyCountdown(remaining, store, world)
                 }
 
                 component.countdown -= dt
@@ -51,7 +56,7 @@ class PreGameCountdown(val requiredPlayers: Int) : Component<EntityStore> {
                 remaining = component.countdown.roundToInt()
                 if (component.countdown != DEFAULT_COUNTDOWN_SECONDS) {
                     component.countdown = DEFAULT_COUNTDOWN_SECONDS
-                    sendMessageCancelled(remaining, store, world)
+                    notifyCancelled(remaining, store, world)
                 }
             }
 
@@ -68,22 +73,26 @@ class PreGameCountdown(val requiredPlayers: Int) : Component<EntityStore> {
             return if (remaining > 5) 0.4f else 0.2f
         }
 
-        private fun sendMessageCountdown(
+        private fun notifyCountdown(
             remaining: Int,
             store: Store<EntityStore>,
             world: World
         ) {
-            sendTitle(MESSAGE_COUNTDOWN_TITLE, MESSAGE_COUNTDOWN_SUBTITLE, remaining, store)
             world.sendMessage(MESSAGE_COUNTDOWN_CHAT.param("remaining", remaining))
+            val soundEventIndex = SoundEvent.getAssetMap().getIndex(SOUND_COUNTDOWN)
+            SoundUtil.playSoundEvent2d(soundEventIndex, SoundCategory.SFX, 1.5f, 1.0f, store)
+            sendTitle(MESSAGE_COUNTDOWN_TITLE, MESSAGE_COUNTDOWN_SUBTITLE, remaining, store)
         }
 
-        private fun sendMessageCancelled(
+        private fun notifyCancelled(
             remaining: Int,
             store: Store<EntityStore>,
             world: World
         ) {
-            sendTitle(MESSAGE_START_CANCELLED_TITLE, MESSAGE_START_CANCELLED_SUBTITLE, remaining, store)
             world.sendMessage(MESSAGE_START_CANCELLED_CHAT.param("remaining", remaining))
+            val soundEventIndex = SoundEvent.getAssetMap().getIndex(SOUND_CANCEL)
+            SoundUtil.playSoundEvent2d(soundEventIndex, SoundCategory.SFX, 1.5f, 1.0f, store)
+            sendTitle(MESSAGE_START_CANCELLED_TITLE, MESSAGE_START_CANCELLED_SUBTITLE, remaining, store)
         }
 
         private fun sendTitle(
