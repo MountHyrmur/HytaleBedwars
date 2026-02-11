@@ -13,7 +13,7 @@ object QueueSpawnpoint : Component<EntityStore?> {
     val CODEC: BuilderCodec<QueueSpawnpoint> =
         BuilderCodec.builder(QueueSpawnpoint::class.java) { QueueSpawnpoint }.build()
     val componentType: ComponentType<EntityStore, QueueSpawnpoint>
-        get() = BedwarsPlugin.get().queueSpawnpointComponent
+        get() = BedwarsPlugin.get().queueSpawnpointComponentType
 
     override fun clone(): Component<EntityStore?> {
         return this

@@ -38,11 +38,11 @@ import java.util.concurrent.CompletableFuture
 class BedwarsPlugin(init: JavaPluginInit) : JavaPlugin(init) {
     lateinit var generatorComponentType: ComponentType<EntityStore?, Generator>
         private set
-    lateinit var generatorBuilderComponent: ComponentType<EntityStore, GeneratorBuilder>
+    lateinit var generatorBuilderComponentType: ComponentType<EntityStore, GeneratorBuilder>
         private set
-    lateinit var teamSpawnpointComponent: ComponentType<EntityStore, TeamSpawnpoint>
+    lateinit var teamSpawnpointComponentType: ComponentType<EntityStore, TeamSpawnpoint>
         private set
-    lateinit var queueSpawnpointComponent: ComponentType<EntityStore, QueueSpawnpoint>
+    lateinit var queueSpawnpointComponentType: ComponentType<EntityStore, QueueSpawnpoint>
         private set
     lateinit var preGameCountdownComponentType: ComponentType<EntityStore, PreGameCountdown>
         private set
@@ -97,19 +97,19 @@ class BedwarsPlugin(init: JavaPluginInit) : JavaPlugin(init) {
                 throw UnsupportedOperationException("Generator must be created directly")
             }
 
-        this.generatorBuilderComponent = entityStoreRegistry.registerComponent(
+        this.generatorBuilderComponentType = entityStoreRegistry.registerComponent(
             GeneratorBuilder::class.java,
             "GeneratorBuilder",
             GeneratorBuilder.CODEC
         )
 
-        this.teamSpawnpointComponent = entityStoreRegistry.registerComponent(
+        this.teamSpawnpointComponentType = entityStoreRegistry.registerComponent(
             TeamSpawnpoint::class.java,
             "TeamSpawnpoint",
             TeamSpawnpoint.CODEC
         )
 
-        this.queueSpawnpointComponent = entityStoreRegistry.registerComponent(
+        this.queueSpawnpointComponentType = entityStoreRegistry.registerComponent(
             QueueSpawnpoint::class.java,
             "QueueSpawnpoint",
             QueueSpawnpoint.CODEC
