@@ -30,6 +30,7 @@ import yt.szczurek.hyrmur.bedwars.component.*
 import yt.szczurek.hyrmur.bedwars.interaction.SnapToGridInteraction
 import yt.szczurek.hyrmur.bedwars.page.GeneratorEditorPageSupplier
 import yt.szczurek.hyrmur.bedwars.page.TeamSpawnpointEditorPageSupplier
+import yt.szczurek.hyrmur.bedwars.system.BedwarsGameStartSystem
 import yt.szczurek.hyrmur.bedwars.system.GeneratorSystem
 import yt.szczurek.hyrmur.bedwars.system.UpdateGeneratorFromBuilderSystem
 import java.awt.Color
@@ -47,6 +48,8 @@ class BedwarsPlugin(init: JavaPluginInit) : JavaPlugin(init) {
     lateinit var preGameCountdownComponentType: ComponentType<EntityStore, PreGameCountdown>
         private set
     lateinit var bedwarsGameHolderResourceType: ResourceType<EntityStore, BedwarsGameHolder>
+        private set
+    lateinit var teamComponentType: ComponentType<EntityStore, Team>
         private set
 
     val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
@@ -121,11 +124,18 @@ class BedwarsPlugin(init: JavaPluginInit) : JavaPlugin(init) {
             )
         }
 
+        this.teamComponentType = entityStoreRegistry.registerComponent(Team::class.java) {
+            throw UnsupportedOperationException(
+                "Team needs to be created manually"
+            )
+        }
+
         this.bedwarsGameHolderResourceType = entityStoreRegistry.registerResource(BedwarsGameHolder::class.java, ::BedwarsGameHolder)
 
         entityStoreRegistry.registerSystem(UpdateGeneratorFromBuilderSystem())
         entityStoreRegistry.registerSystem(GeneratorSystem())
         entityStoreRegistry.registerSystem(PreGameCountdown.TickCountdown())
+        entityStoreRegistry.registerSystem(BedwarsGameStartSystem())
 
         this.getCodecRegistry(Interaction.CODEC)
             .register("SnapToGrid", SnapToGridInteraction::class.java, SnapToGridInteraction.CODEC)

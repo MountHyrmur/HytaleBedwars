@@ -11,6 +11,7 @@ import com.hypixel.hytale.server.core.universe.world.World
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore
 import com.hypixel.hytale.server.core.util.EventTitleUtil
 import yt.szczurek.hyrmur.bedwars.BedwarsPlugin
+import yt.szczurek.hyrmur.bedwars.event.BedwarsGameStartEvent
 import kotlin.math.roundToInt
 
 const val DEFAULT_COUNTDOWN_SECONDS: Float = 10.0f
@@ -62,6 +63,7 @@ class PreGameCountdown(val requiredPlayers: Int) : Component<EntityStore> {
 
             if (remaining <= 0) {
                 commandBuffer.removeEntity(archetypeChunk.getReferenceTo(i), RemoveReason.REMOVE)
+                commandBuffer.invoke(BedwarsGameStartEvent())
             }
         }
 
