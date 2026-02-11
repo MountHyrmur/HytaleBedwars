@@ -14,6 +14,9 @@ import kotlinx.coroutines.launch
 import yt.szczurek.hyrmur.bedwars.BedwarsPlugin
 import yt.szczurek.hyrmur.bedwars.asset.BedwarsGameConfig
 
+private val MESSAGE_START_START = Message.translation("server.commands.bedwars.map.startgame.startStart")
+private val MESSAGE_START_END = Message.translation("server.commands.bedwars.map.startgame.startEnd")
+
 class BedwarsStartgameCommand: AbstractPlayerCommand("startgame", "server.commands.bedwars.map.startgame.desc")  {
     override fun execute(
         ctx: CommandContext,
@@ -32,10 +35,5 @@ class BedwarsStartgameCommand: AbstractPlayerCommand("startgame", "server.comman
             }
             ctx.sendMessage(MESSAGE_START_END)
         }
-    }
-
-    companion object {
-        val MESSAGE_START_START = Message.translation("server.commands.bedwars.map.startgame.startStart")
-        val MESSAGE_START_END = Message.translation("server.commands.bedwars.map.startgame.startEnd")
     }
 }

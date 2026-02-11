@@ -37,13 +37,13 @@ import java.util.concurrent.CompletableFuture
 import kotlin.io.path.Path
 import kotlin.io.path.div
 
-object BedwarsMapManager {
-    val DEFAULT_CHUNK_TINT: Color = Color(91.toByte(), 158.toByte(), 40.toByte())
-    val MESSAGE_NO_MUTABLE_PACK = Message.translation("server.commands.bedwars.map.create.noMutablePack")
-    val MESSAGE_IO_CREATION_FAILED = Message.translation("server.commands.bedwars.map.createIoFail")
-    val MESSAGE_NO_INSTANCE = Message.translation("server.commands.bedwars.map.edit.fail.noInstance")
-    val MESSAGE_NOT_BW_MAP = Message.translation("server.commands.bedwars.map.common.notBwMap")
+private val DEFAULT_CHUNK_TINT: Color = Color(91.toByte(), 158.toByte(), 40.toByte())
+private val MESSAGE_NO_MUTABLE_PACK = Message.translation("server.commands.bedwars.map.create.noMutablePack")
+private val MESSAGE_IO_CREATION_FAILED = Message.translation("server.commands.bedwars.map.createIoFail")
+private val MESSAGE_NO_INSTANCE = Message.translation("server.commands.bedwars.map.edit.fail.noInstance")
+val MESSAGE_NOT_BW_MAP = Message.translation("server.commands.bedwars.map.common.notBwMap")
 
+object BedwarsMapManager {
     private val mapsLoadedForEditing: HashMap<UUID, String> = HashMap()
 
     suspend fun createNew(name: String) {

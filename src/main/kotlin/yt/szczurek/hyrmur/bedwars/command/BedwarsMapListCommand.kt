@@ -7,17 +7,14 @@ import com.hypixel.hytale.server.core.util.message.MessageFormat
 import yt.szczurek.hyrmur.bedwars.asset.BedwarsMap
 import java.util.concurrent.CompletableFuture
 
-class BedwarsMapListCommand : AbstractAsyncCommand("list", "server.commands.bedwars.map.list.desc") {
+private val HEADER = Message.translation("server.commands.bedwars.map.list.header")
 
+class BedwarsMapListCommand : AbstractAsyncCommand("list", "server.commands.bedwars.map.list.desc") {
     override fun executeAsync(ctx: CommandContext): CompletableFuture<Void> {
         val mapAssets = BedwarsMap.assetMap.assetMap.keys
         ctx.sendMessage(
             MessageFormat.list(HEADER, mapAssets.stream().map(Message::raw).toList())
         )
         return CompletableFuture.completedFuture(null)
-    }
-
-    companion object {
-        val HEADER = Message.translation("server.commands.bedwars.map.list.header")
     }
 }
