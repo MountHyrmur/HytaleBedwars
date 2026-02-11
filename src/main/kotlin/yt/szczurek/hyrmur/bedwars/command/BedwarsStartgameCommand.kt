@@ -12,6 +12,7 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore
 import kotlinx.coroutines.future.await
 import kotlinx.coroutines.launch
 import yt.szczurek.hyrmur.bedwars.BedwarsPlugin
+import yt.szczurek.hyrmur.bedwars.asset.BedwarsGameConfig
 
 class BedwarsStartgameCommand: AbstractPlayerCommand("startgame", "server.commands.bedwars.map.startgame.desc")  {
     override fun execute(
@@ -21,10 +22,11 @@ class BedwarsStartgameCommand: AbstractPlayerCommand("startgame", "server.comman
         playerRef: PlayerRef,
         world: World
     ) {
-        val transform = store.getComponent(ref, TransformComponent.getComponentType())!!
+        val transform = store.getComponent(ref, TransformComponent.getComponentType())!!.transform.clone()
         ctx.sendMessage(MESSAGE_START_START)
+        val config = BedwarsGameConfig(1)
         BedwarsPlugin.get().scope.launch {
-            val game = BedwarsPlugin.createGame("Forest", transform.transform, world).await()
+            val game = BedwarsPlugin.createGame("Forest", config, transform, world).await()
             world.execute {
                 game.addPlayer(ref, store)
             }

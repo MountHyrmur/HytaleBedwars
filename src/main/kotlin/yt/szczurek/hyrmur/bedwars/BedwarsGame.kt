@@ -3,22 +3,19 @@ package yt.szczurek.hyrmur.bedwars
 import com.hypixel.hytale.builtin.instances.InstancesPlugin
 import com.hypixel.hytale.builtin.instances.config.InstanceWorldConfig
 import com.hypixel.hytale.builtin.instances.removal.WorldEmptyCondition
-import com.hypixel.hytale.component.ComponentAccessor
-import com.hypixel.hytale.component.Ref
-import com.hypixel.hytale.component.RemoveReason
-import com.hypixel.hytale.component.Store
+import com.hypixel.hytale.component.*
 import com.hypixel.hytale.math.vector.Transform
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent
 import com.hypixel.hytale.server.core.universe.PlayerRef
 import com.hypixel.hytale.server.core.universe.world.World
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore
 import kotlinx.coroutines.CompletableDeferred
+import yt.szczurek.hyrmur.bedwars.asset.BedwarsGameConfig
 import yt.szczurek.hyrmur.bedwars.asset.BedwarsMap
+import yt.szczurek.hyrmur.bedwars.component.PreGameCountdown
 import yt.szczurek.hyrmur.bedwars.component.QueueSpawnpoint
 
-class BedwarsGame(val mapAsset: BedwarsMap, val world: World) {
-
-
+class BedwarsGame(val mapAsset: BedwarsMap, val config: BedwarsGameConfig, val world: World) {
     suspend fun init() {
 
         val deferred = CompletableDeferred<Unit>()
@@ -59,10 +56,21 @@ class BedwarsGame(val mapAsset: BedwarsMap, val world: World) {
         worldConfig.setCanSaveChunks(false)
         InstanceWorldConfig.ensureAndGet(worldConfig).setRemovalConditions(WorldEmptyCondition(30.0))
         worldConfig.markChanged()
+
+        val requiredPlayers = mapAsset.teamCount * config.teamSize
+
+        val holder = EntityStore.REGISTRY.newHolder()
+        holder.addComponent(PreGameCountdown.componentType, PreGameCountdown(requiredPlayers))
+        store.addEntity(holder, AddReason.SPAWN)
     }
 
     companion object {
-        suspend fun initialize(mapName: String, returnTransform: Transform, returnWorld: World): BedwarsGame {
+        suspend fun initialize(
+            mapName: String,
+            config: BedwarsGameConfig,
+            returnTransform: Transform,
+            returnWorld: World
+        ): BedwarsGame {
             val mapAsset = BedwarsMap.assetMap.getAsset(mapName)
                 ?: throw IllegalArgumentException("Map asset named $mapName does not exist")
 
@@ -71,7 +79,7 @@ class BedwarsGame(val mapAsset: BedwarsMap, val world: World) {
             }
 
             val world = BedwarsMapManager.loadForPlaying(mapAsset, returnTransform, returnWorld)
-            val game = BedwarsGame(mapAsset, world)
+            val game = BedwarsGame(mapAsset, config, world)
 
             game.init()
 
