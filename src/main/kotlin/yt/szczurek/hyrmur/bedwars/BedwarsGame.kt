@@ -14,8 +14,11 @@ import yt.szczurek.hyrmur.bedwars.asset.BedwarsGameConfig
 import yt.szczurek.hyrmur.bedwars.asset.BedwarsMap
 import yt.szczurek.hyrmur.bedwars.component.PreGameCountdown
 import yt.szczurek.hyrmur.bedwars.component.QueueSpawnpoint
+import yt.szczurek.hyrmur.bedwars.component.TeamSpawnpoint
 
 class BedwarsGame(val mapAsset: BedwarsMap, val config: BedwarsGameConfig, val world: World) {
+    val teams: MutableList<String> = ArrayList()
+
     suspend fun init() {
 
         val deferred = CompletableDeferred<Unit>()
@@ -46,6 +49,11 @@ class BedwarsGame(val mapAsset: BedwarsMap, val config: BedwarsGameConfig, val w
             val transform = chunk.getComponent(i, TransformComponent.getComponentType())!!
             queueSpawnpoints.add(transform.transform)
             commandBuffer.removeEntity(chunk.getReferenceTo(i), RemoveReason.REMOVE)
+        }
+
+        store.forEachEntityParallel(TeamSpawnpoint.componentType) { i, chunk, commandBuffer ->
+            val team = chunk.getComponent(i, TeamSpawnpoint.componentType)!!
+            teams.addLast(team.team)
         }
 
         val worldConfig = world.worldConfig
