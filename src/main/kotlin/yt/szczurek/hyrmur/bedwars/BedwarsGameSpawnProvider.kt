@@ -5,10 +5,17 @@ import com.hypixel.hytale.math.vector.Transform
 import com.hypixel.hytale.math.vector.Vector3d
 import com.hypixel.hytale.server.core.universe.world.World
 import com.hypixel.hytale.server.core.universe.world.spawn.ISpawnProvider
+import yt.szczurek.hyrmur.bedwars.component.Team
 import java.util.*
 
-class BedwarsGameSpawnProvider(val queueSpawnpoints: Array<Transform>): ISpawnProvider {
+class BedwarsGameSpawnProvider(
+    val queueSpawnpoints: Array<Transform>,
+    val teamSpawnpoints: Map<String, Transform>)
+    : ISpawnProvider {
 
+    fun getTeamSpawnpoint(team: String): Transform {
+        return teamSpawnpoints[team]!!.clone()
+    }
 
     override fun getSpawnPoint(world: World, uuid: UUID): Transform {
         return queueSpawnpoints.random().clone()
@@ -34,7 +41,7 @@ class BedwarsGameSpawnProvider(val queueSpawnpoints: Array<Transform>): ISpawnPr
         @JvmField
         var CODEC: BuilderCodec<BedwarsGameSpawnProvider> = BuilderCodec.builder(
             BedwarsGameSpawnProvider::class.java
-        ) { BedwarsGameSpawnProvider(emptyArray()) }
+        ) { BedwarsGameSpawnProvider(emptyArray(), emptyMap()) }
             .build()
     }
 }

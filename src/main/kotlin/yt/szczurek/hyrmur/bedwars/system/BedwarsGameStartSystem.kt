@@ -5,19 +5,25 @@ import com.hypixel.hytale.component.Store
 import com.hypixel.hytale.component.system.WorldEventSystem
 import com.hypixel.hytale.protocol.SoundCategory
 import com.hypixel.hytale.server.core.asset.type.soundevent.config.SoundEvent
+import com.hypixel.hytale.server.core.modules.entity.teleport.Teleport
 import com.hypixel.hytale.server.core.universe.PlayerRef
 import com.hypixel.hytale.server.core.universe.world.SoundUtil
 import com.hypixel.hytale.server.core.universe.world.World
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore
 import yt.szczurek.hyrmur.bedwars.BedwarsGame
+import yt.szczurek.hyrmur.bedwars.BedwarsGameSpawnProvider
+import yt.szczurek.hyrmur.bedwars.BedwarsPlugin
 import yt.szczurek.hyrmur.bedwars.component.Team
 import yt.szczurek.hyrmur.bedwars.event.BedwarsGameStartEvent
 import yt.szczurek.hyrmur.bedwars.event.GroupPlayersEvent
-import java.util.UUID
+import java.util.*
+import kotlin.collections.component1
+import kotlin.collections.component2
+import kotlin.collections.iterator
 
 private const val START_SOUND = "SFX_Toad_Rhino_Alerted"
 
-class BedwarsGameStartSystem() : WorldEventSystem<EntityStore, BedwarsGameStartEvent>(BedwarsGameStartEvent::class.java) {
+class BedwarsGameStartSystem : WorldEventSystem<EntityStore, BedwarsGameStartEvent>(BedwarsGameStartEvent::class.java) {
     override fun handle(
         store: Store<EntityStore>,
         commandBuffer: CommandBuffer<EntityStore>,
@@ -27,17 +33,31 @@ class BedwarsGameStartSystem() : WorldEventSystem<EntityStore, BedwarsGameStartE
         SoundUtil.playSoundEvent2d(soundEventIndex, SoundCategory.SFX, 1.5f, 1.0f, store)
 
         val world = store.externalData.world
-        assignTeams(world, store, commandBuffer)
+
+        val spawnProvider: BedwarsGameSpawnProvider? = world.worldConfig.spawnProvider as? BedwarsGameSpawnProvider
+        spawnProvider ?: throw IllegalStateException("World's spawn provider isn't BedwarsGameSpawnProvider")
+
+        val teamMap = assignTeams(world, store, spawnProvider)
+        val playersByUuid: Map<UUID, PlayerRef> = world.playerRefs.associateBy(PlayerRef::getUuid)
+
+        for ((name, members) in teamMap) {
+            for (member in members) {
+                val player = playersByUuid[member]!!
+                val ref = player.reference ?: continue
+                commandBuffer.addComponent(ref, Team.componentType, Team(name))
+                val teleport = Teleport.createForPlayer(spawnProvider.getTeamSpawnpoint(name))
+                commandBuffer.addComponent(ref, Teleport.getComponentType(), teleport)
+            }
+        }
 
     }
 
     private fun assignTeams(
         world: World,
         store: Store<EntityStore>,
-        commandBuffer: CommandBuffer<EntityStore>
-    ) {
+        spawnProvider: BedwarsGameSpawnProvider
+    ): HashMap<String, ArrayList<UUID>> {
         val players = world.playerRefs
-        val playersByUuid: Map<UUID, PlayerRef> = players.associateBy(PlayerRef::getUuid)
         val randomPlayers: LinkedHashSet<UUID> = LinkedHashSet(players.map(PlayerRef::getUuid))
 
         val groupEvent = GroupPlayersEvent(players)
@@ -52,10 +72,10 @@ class BedwarsGameStartSystem() : WorldEventSystem<EntityStore, BedwarsGameStartE
         }
 
         val game = BedwarsGame.get(store)!!
-        val teamNames = game.teams
         val teamSize = game.config.teamSize
+        val teamNames = spawnProvider.teamSpawnpoints.keys
 
-        val teamMap: MutableMap<String, ArrayList<UUID>> = HashMap()
+        val teamMap: HashMap<String, ArrayList<UUID>> = HashMap()
 
         for (teamName in teamNames) {
             val members = ArrayList<UUID>()
@@ -80,18 +100,16 @@ class BedwarsGameStartSystem() : WorldEventSystem<EntityStore, BedwarsGameStartE
             } finally {
                 // Fill in remaining players from randoms
                 while (members.size < teamSize) {
-                    members.add(randomPlayers.removeFirst())
+                    try {
+                        members.add(randomPlayers.removeFirst())
+                    } catch (_: NoSuchElementException) {
+                        break
+                    }
                 }
             }
             teamMap[teamName] = members
         }
 
-        for ((name, members) in teamMap) {
-            for (member in members) {
-                val player = playersByUuid[member]!!
-                val ref = player.reference ?: continue
-                commandBuffer.addComponent(ref, Team.componentType, Team(name))
-            }
-        }
+        return  teamMap
     }
 }

@@ -17,7 +17,6 @@ import yt.szczurek.hyrmur.bedwars.component.QueueSpawnpoint
 import yt.szczurek.hyrmur.bedwars.component.TeamSpawnpoint
 
 class BedwarsGame(val mapAsset: BedwarsMap, val config: BedwarsGameConfig, val world: World) {
-    val teams: MutableList<String> = ArrayList()
 
     suspend fun init() {
 
@@ -51,13 +50,16 @@ class BedwarsGame(val mapAsset: BedwarsMap, val config: BedwarsGameConfig, val w
             commandBuffer.removeEntity(chunk.getReferenceTo(i), RemoveReason.REMOVE)
         }
 
+        val teamSpawnpoints: HashMap<String, Transform> = HashMap()
+
         store.forEachEntityParallel(TeamSpawnpoint.componentType) { i, chunk, commandBuffer ->
             val team = chunk.getComponent(i, TeamSpawnpoint.componentType)!!
-            teams.addLast(team.team)
+            val transform = chunk.getComponent(i, TransformComponent.getComponentType())!!
+            teamSpawnpoints[team.team] = transform.transform.clone()
         }
 
         val worldConfig = world.worldConfig
-        worldConfig.spawnProvider = BedwarsGameSpawnProvider(queueSpawnpoints.toTypedArray())
+        worldConfig.spawnProvider = BedwarsGameSpawnProvider(queueSpawnpoints.toTypedArray(), teamSpawnpoints)
         worldConfig.isDeleteOnRemove = true
         worldConfig.isDeleteOnUniverseStart = true
         worldConfig.isSavingPlayers = false

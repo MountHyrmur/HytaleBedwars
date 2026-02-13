@@ -11,7 +11,7 @@ class GroupPlayersEvent(val players: Collection<PlayerRef>): EcsEvent() {
         groups.add(group)
     }
 
-    fun addGroup(group: Set<PlayerRef>) {
+    fun addGroupPlayers(group: Set<PlayerRef>) {
         addGroup(group.map(PlayerRef::getUuid).toSet())
     }
 }
