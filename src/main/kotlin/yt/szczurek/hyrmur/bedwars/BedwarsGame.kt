@@ -56,6 +56,7 @@ class BedwarsGame(val mapAsset: BedwarsMap, val config: BedwarsGameConfig, val w
             val team = chunk.getComponent(i, TeamSpawnpoint.componentType)!!
             val transform = chunk.getComponent(i, TransformComponent.getComponentType())!!
             teamSpawnpoints[team.team] = transform.transform.clone()
+            commandBuffer.removeEntity(chunk.getReferenceTo(i), RemoveReason.REMOVE)
         }
 
         val worldConfig = world.worldConfig
