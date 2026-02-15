@@ -5,21 +5,23 @@ import com.hypixel.hytale.component.Store
 import com.hypixel.hytale.component.system.WorldEventSystem
 import com.hypixel.hytale.protocol.SoundCategory
 import com.hypixel.hytale.server.core.asset.type.soundevent.config.SoundEvent
+import com.hypixel.hytale.server.core.modules.entity.component.Interactable
+import com.hypixel.hytale.server.core.modules.entity.component.ModelComponent
 import com.hypixel.hytale.server.core.modules.entity.teleport.Teleport
+import com.hypixel.hytale.server.core.modules.interaction.Interactions
 import com.hypixel.hytale.server.core.universe.PlayerRef
 import com.hypixel.hytale.server.core.universe.world.SoundUtil
 import com.hypixel.hytale.server.core.universe.world.World
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore
 import yt.szczurek.hyrmur.bedwars.BedwarsGame
 import yt.szczurek.hyrmur.bedwars.BedwarsGameSpawnProvider
-import yt.szczurek.hyrmur.bedwars.BedwarsPlugin
+import yt.szczurek.hyrmur.bedwars.asset.BedwarsGenerator
+import yt.szczurek.hyrmur.bedwars.component.Generator
+import yt.szczurek.hyrmur.bedwars.component.GeneratorBuilder
 import yt.szczurek.hyrmur.bedwars.component.Team
 import yt.szczurek.hyrmur.bedwars.event.BedwarsGameStartEvent
 import yt.szczurek.hyrmur.bedwars.event.GroupPlayersEvent
 import java.util.*
-import kotlin.collections.component1
-import kotlin.collections.component2
-import kotlin.collections.iterator
 
 private const val START_SOUND = "SFX_Toad_Rhino_Alerted"
 
@@ -49,7 +51,7 @@ class BedwarsGameStartSystem : WorldEventSystem<EntityStore, BedwarsGameStartEve
                 commandBuffer.addComponent(ref, Teleport.getComponentType(), teleport)
             }
         }
-
+        commandBuffer.run(this::setupGenerators)
     }
 
     private fun assignTeams(
@@ -111,5 +113,18 @@ class BedwarsGameStartSystem : WorldEventSystem<EntityStore, BedwarsGameStartEve
         }
 
         return  teamMap
+    }
+
+    private fun setupGenerators(store: Store<EntityStore>) {
+        val componentType = GeneratorBuilder.componentType
+        store.forEachEntityParallel(componentType) { i, archetypeChunk, commandBuffer ->
+            val generatorBuilder = archetypeChunk.getComponent(i, componentType)!!
+            val ref = archetypeChunk.getReferenceTo(i)
+            val config = BedwarsGenerator.assetMap.getAsset(generatorBuilder.generatorName)!!
+            commandBuffer.addComponent(ref, Generator.componentType, Generator(config))
+            commandBuffer.tryRemoveComponent(ref, Interactable.getComponentType())
+            commandBuffer.tryRemoveComponent(ref, Interactions.getComponentType())
+            commandBuffer.tryRemoveComponent(ref, ModelComponent.getComponentType())
+        }
     }
 }
