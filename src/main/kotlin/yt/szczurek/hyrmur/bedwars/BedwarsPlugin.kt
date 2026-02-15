@@ -31,6 +31,7 @@ import yt.szczurek.hyrmur.bedwars.interaction.SnapToGridInteraction
 import yt.szczurek.hyrmur.bedwars.page.GeneratorEditorPageSupplier
 import yt.szczurek.hyrmur.bedwars.page.TeamSpawnpointEditorPageSupplier
 import yt.szczurek.hyrmur.bedwars.system.BedwarsGameStartSystem
+import yt.szczurek.hyrmur.bedwars.system.BlockProtectionSystems
 import yt.szczurek.hyrmur.bedwars.system.GeneratorSystem
 import yt.szczurek.hyrmur.bedwars.system.UpdateGeneratorFromBuilderSystem
 import java.awt.Color
@@ -136,6 +137,8 @@ class BedwarsPlugin(init: JavaPluginInit) : JavaPlugin(init) {
         entityStoreRegistry.registerSystem(GeneratorSystem())
         entityStoreRegistry.registerSystem(PreGameCountdown.TickCountdown())
         entityStoreRegistry.registerSystem(BedwarsGameStartSystem())
+        entityStoreRegistry.registerSystem(BlockProtectionSystems.BlockBreakSystem())
+        entityStoreRegistry.registerSystem(BlockProtectionSystems.BlockDamageSystem())
 
         this.getCodecRegistry(Interaction.CODEC)
             .register("SnapToGrid", SnapToGridInteraction::class.java, SnapToGridInteraction.CODEC)
