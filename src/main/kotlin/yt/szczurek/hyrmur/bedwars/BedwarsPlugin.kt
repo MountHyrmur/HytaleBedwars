@@ -38,7 +38,7 @@ import java.awt.Color
 import java.util.concurrent.CompletableFuture
 
 class BedwarsPlugin(init: JavaPluginInit) : JavaPlugin(init) {
-    lateinit var generatorComponentType: ComponentType<EntityStore?, Generator>
+    lateinit var generatorComponentType: ComponentType<EntityStore, Generator>
         private set
     lateinit var generatorBuilderComponentType: ComponentType<EntityStore, GeneratorBuilder>
         private set

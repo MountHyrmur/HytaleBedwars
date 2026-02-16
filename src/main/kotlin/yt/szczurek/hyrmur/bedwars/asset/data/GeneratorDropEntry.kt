@@ -9,11 +9,8 @@ import com.hypixel.hytale.server.core.inventory.ItemStack
 class GeneratorDropEntry {
     var item: String = "Ingredient_Bar_Iron"
         private set
-    private var count: Int = 1
+    var count: Int = 1
     var cooldownsByLevel: FloatArray = floatArrayOf(1f)
-
-    val itemStack: ItemStack
-        get() = ItemStack(item, count)
 
     fun getCooldown(level: Int): Long {
         val cooldownS = cooldownsByLevel[(Integer.min(level, cooldownsByLevel.size - 1))]

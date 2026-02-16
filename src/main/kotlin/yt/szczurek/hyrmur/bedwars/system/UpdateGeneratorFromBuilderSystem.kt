@@ -19,19 +19,19 @@ class UpdateGeneratorFromBuilderSystem : RefChangeSystem<EntityStore, GeneratorB
     }
 
     override fun onComponentAdded(
-        ref: Ref<EntityStore?>,
+        ref: Ref<EntityStore>,
         builder: GeneratorBuilder,
-        store: Store<EntityStore?>,
-        commandBuffer: CommandBuffer<EntityStore?>
+        store: Store<EntityStore>,
+        commandBuffer: CommandBuffer<EntityStore>
     ) {
     }
 
     override fun onComponentSet(
-        ref: Ref<EntityStore?>,
+        ref: Ref<EntityStore>,
         oldBuilder: GeneratorBuilder?,
         newBuilder: GeneratorBuilder,
-        store: Store<EntityStore?>,
-        commandBuffer: CommandBuffer<EntityStore?>
+        store: Store<EntityStore>,
+        commandBuffer: CommandBuffer<EntityStore>
     ) {
         if (commandBuffer.getComponent(ref, Generator.componentType) != null) {
             val config: BedwarsGenerator =
@@ -41,14 +41,14 @@ class UpdateGeneratorFromBuilderSystem : RefChangeSystem<EntityStore, GeneratorB
     }
 
     override fun onComponentRemoved(
-        ref: Ref<EntityStore?>,
+        ref: Ref<EntityStore>,
         builder: GeneratorBuilder,
-        store: Store<EntityStore?>,
-        commandBuffer: CommandBuffer<EntityStore?>
+        store: Store<EntityStore>,
+        commandBuffer: CommandBuffer<EntityStore>
     ) {
     }
 
-    override fun getQuery(): Query<EntityStore?> {
+    override fun getQuery(): Query<EntityStore> {
         return generatorComponentType
     }
 }

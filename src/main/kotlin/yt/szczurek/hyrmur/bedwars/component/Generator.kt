@@ -38,7 +38,7 @@ class Generator : Component<EntityStore?> {
     }
 
     companion object {
-        val componentType: ComponentType<EntityStore?, Generator>
+        val componentType: ComponentType<EntityStore, Generator>
             get() = BedwarsPlugin.get().generatorComponentType
     }
 }
