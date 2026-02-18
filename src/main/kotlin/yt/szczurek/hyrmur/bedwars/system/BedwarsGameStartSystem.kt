@@ -16,6 +16,7 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore
 import yt.szczurek.hyrmur.bedwars.BedwarsGame
 import yt.szczurek.hyrmur.bedwars.BedwarsGameSpawnProvider
 import yt.szczurek.hyrmur.bedwars.asset.BedwarsGenerator
+import yt.szczurek.hyrmur.bedwars.asset.BedwarsTeam
 import yt.szczurek.hyrmur.bedwars.component.Generator
 import yt.szczurek.hyrmur.bedwars.component.GeneratorBuilder
 import yt.szczurek.hyrmur.bedwars.component.Team
@@ -43,10 +44,11 @@ class BedwarsGameStartSystem : WorldEventSystem<EntityStore, BedwarsGameStartEve
         val playersByUuid: Map<UUID, PlayerRef> = world.playerRefs.associateBy(PlayerRef::getUuid)
 
         for ((name, members) in teamMap) {
+            val asset = BedwarsTeam.assetMap.getAsset(name)!!
             for (member in members) {
                 val player = playersByUuid[member]!!
                 val ref = player.reference ?: continue
-                commandBuffer.addComponent(ref, Team.componentType, Team(name))
+                commandBuffer.addComponent(ref, Team.componentType, Team(asset))
                 val teleport = Teleport.createForPlayer(spawnProvider.getTeamSpawnpoint(name))
                 commandBuffer.addComponent(ref, Teleport.getComponentType(), teleport)
             }
