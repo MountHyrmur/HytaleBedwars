@@ -48,7 +48,7 @@ class BedwarsGameStartSystem : WorldEventSystem<EntityStore, BedwarsGameStartEve
             for (member in members) {
                 val player = playersByUuid[member]!!
                 val ref = player.reference ?: continue
-                commandBuffer.addComponent(ref, Team.componentType, Team(asset))
+                commandBuffer.putComponent(ref, Team.componentType, Team(asset))
                 val teleport = Teleport.createForPlayer(spawnProvider.getTeamSpawnpoint(name))
                 commandBuffer.addComponent(ref, Teleport.getComponentType(), teleport)
             }
