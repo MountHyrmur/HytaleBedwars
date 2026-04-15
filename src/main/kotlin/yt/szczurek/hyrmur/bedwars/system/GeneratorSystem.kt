@@ -6,13 +6,13 @@ import com.hypixel.hytale.component.CommandBuffer
 import com.hypixel.hytale.component.Store
 import com.hypixel.hytale.component.query.Query
 import com.hypixel.hytale.component.system.tick.EntityTickingSystem
-import com.hypixel.hytale.math.vector.Vector3d
-import com.hypixel.hytale.math.vector.Vector3f
+import com.hypixel.hytale.math.vector.Rotation3f
 import com.hypixel.hytale.server.core.inventory.ItemStack
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent
 import com.hypixel.hytale.server.core.modules.entity.item.ItemComponent
 import com.hypixel.hytale.server.core.modules.entity.item.PreventItemMerging
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore
+import org.joml.Vector3d
 import yt.szczurek.hyrmur.bedwars.asset.data.GeneratorDropEntry
 import yt.szczurek.hyrmur.bedwars.component.Generator
 
@@ -43,11 +43,13 @@ class GeneratorSystem : EntityTickingSystem<EntityStore>() {
     }
 
     fun spawnItem(item: String, pos: Vector3d, commandBuffer: CommandBuffer<EntityStore>) {
+        val rotation = Rotation3f(0.0f, 1.0f, 0.0f)
+        rotation.setYaw((Math.random() * 2 * Math.PI).toFloat())
         val holder = ItemComponent.generateItemDrop(
             commandBuffer,
             ItemStack(item),
             pos,
-            Vector3f.UP.rotateY((Math.random() * 2 * Math.PI).toFloat()),
+            rotation,
             0.0f,
             0.0f,
             0.0f

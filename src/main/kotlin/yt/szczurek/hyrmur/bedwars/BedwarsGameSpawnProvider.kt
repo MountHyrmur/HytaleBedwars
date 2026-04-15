@@ -2,10 +2,9 @@ package yt.szczurek.hyrmur.bedwars
 
 import com.hypixel.hytale.codec.builder.BuilderCodec
 import com.hypixel.hytale.math.vector.Transform
-import com.hypixel.hytale.math.vector.Vector3d
 import com.hypixel.hytale.server.core.universe.world.World
 import com.hypixel.hytale.server.core.universe.world.spawn.ISpawnProvider
-import yt.szczurek.hyrmur.bedwars.component.Team
+import org.joml.Vector3d
 import java.util.*
 
 class BedwarsGameSpawnProvider(
@@ -30,7 +29,7 @@ class BedwarsGameSpawnProvider(
         val distanceSquared = distance * distance
 
         for (point in queueSpawnpoints) {
-            if (position.distanceSquaredTo(point.getPosition()) < distanceSquared) {
+            if (position.distanceSquared(point.getPosition()) < distanceSquared) {
                 return true
             }
         }

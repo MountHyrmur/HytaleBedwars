@@ -19,6 +19,6 @@ class BedwarsDevCommand : AbstractPlayerCommand("dev", "Command for triggering s
         world: World
     ) {
         val player: Player = checkNotNull(store.getComponent(ref, Player.getComponentType()))
-        player.sendMessage(Message.raw("Nothing to see here!"))
+        commandContext.sendMessage(Message.raw("Nothing to see here!"))
     }
 }

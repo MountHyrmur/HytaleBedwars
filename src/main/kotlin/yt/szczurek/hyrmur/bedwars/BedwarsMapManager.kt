@@ -9,8 +9,7 @@ import com.hypixel.hytale.component.Ref
 import com.hypixel.hytale.component.Store
 import com.hypixel.hytale.math.util.ChunkUtil
 import com.hypixel.hytale.math.vector.Transform
-import com.hypixel.hytale.math.vector.Vector3d
-import com.hypixel.hytale.math.vector.Vector3i
+import com.hypixel.hytale.math.vector.Vector3dUtil
 import com.hypixel.hytale.protocol.Color
 import com.hypixel.hytale.protocol.GameMode
 import com.hypixel.hytale.server.core.Message
@@ -27,6 +26,8 @@ import com.hypixel.hytale.server.core.universe.world.worldmap.provider.DisabledW
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.future.await
 import kotlinx.coroutines.withContext
+import org.joml.Vector3d
+import org.joml.Vector3i
 import yt.szczurek.hyrmur.bedwars.asset.BedwarsMap
 import yt.szczurek.hyrmur.bedwars.component.QueueSpawnpoint
 import yt.szczurek.hyrmur.bedwars.component.TeamSpawnpoint
@@ -224,12 +225,12 @@ object BedwarsMapManager {
         store.forEachEntityParallel(TeamSpawnpoint.componentType) { i, archetype, _ ->
             val spawnpoint = archetype.getComponent(i, TeamSpawnpoint.componentType)!!
             val position = archetype.getComponent(i, TransformComponent.getComponentType())!!.position
-            val formattedPosition = Vector3d.formatShortString(position.clone().floor())
+            val formattedPosition = Vector3dUtil.formatShortString(Vector3d(position).floor())
             val team = spawnpoint.team
 
             val otherTeamPos = teams[team]
             if (otherTeamPos != null) {
-                val formattedOtherTeamPos = Vector3d.formatShortString(otherTeamPos.clone().floor())
+                val formattedOtherTeamPos = Vector3dUtil.formatShortString(Vector3d(otherTeamPos).floor())
                 teamSpawnpointReport.addTextError("There are two $team teams: at $formattedPosition and at $formattedOtherTeamPos")
             }
             if (team.isEmpty()) {

@@ -3,8 +3,7 @@ package yt.szczurek.hyrmur.bedwars
 import com.hypixel.hytale.component.ComponentAccessor
 import com.hypixel.hytale.component.Holder
 import com.hypixel.hytale.component.Ref
-import com.hypixel.hytale.math.vector.Vector3d
-import com.hypixel.hytale.math.vector.Vector3f
+import com.hypixel.hytale.math.vector.Rotation3f
 import com.hypixel.hytale.server.core.asset.type.model.config.Model
 import com.hypixel.hytale.server.core.asset.type.model.config.ModelAsset
 import com.hypixel.hytale.server.core.entity.UUIDComponent
@@ -14,6 +13,7 @@ import com.hypixel.hytale.server.core.modules.entity.component.PropComponent
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent
 import com.hypixel.hytale.server.core.modules.entity.teleport.Teleport
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore
+import org.joml.Vector3d
 
 object EntityUtil {
     const val SNAP_RESOLUTION: Double = 0.5
@@ -25,7 +25,7 @@ object EntityUtil {
 
         holder.addComponent(
             TransformComponent.getComponentType(),
-            TransformComponent(pos, Vector3f.ZERO)
+            TransformComponent(pos, Rotation3f.ZERO)
         )
         holder.addComponent(ModelComponent.getComponentType(), ModelComponent(model))
         holder.addComponent(PersistentModel.getComponentType(), PersistentModel(model.toReference()))
@@ -36,11 +36,12 @@ object EntityUtil {
 
     fun snapEntityToGrid(entity: Ref<EntityStore?>, accessor: ComponentAccessor<EntityStore?>) {
         val transform = accessor.getComponent(entity, TransformComponent.getComponentType()) ?: return
-        val teleport = Teleport.createExact(snappedPosition(transform.position), Vector3f.ZERO, Vector3f.ZERO)
+        val teleport = Teleport.createExact(snappedPosition(transform.position), Rotation3f(), Rotation3f())
         accessor.addComponent(entity, Teleport.getComponentType(),teleport)
     }
 
     fun snappedPosition(position: Vector3d): Vector3d {
-        return position.clone().scale(1.0/SNAP_RESOLUTION).add(SNAP_RESOLUTION).floor().scale(SNAP_RESOLUTION)
+        val snapResolutionVector = Vector3d(SNAP_RESOLUTION)
+        return Vector3d(position).mul(1.0/SNAP_RESOLUTION).add(snapResolutionVector).floor().mul(snapResolutionVector)
     }
 }
