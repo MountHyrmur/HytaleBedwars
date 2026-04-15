@@ -1,7 +1,7 @@
 {
   "Version": 4,
   "UUID": {
-    "$binary": "oSaFN5uVQuGR+QThWlW9hw==",
+    "$binary": "3vduB/HpTv2zWmh1ZdxnNQ==",
     "$type": "04"
   },
   "Seed": 1769522383587,
@@ -61,7 +61,7 @@
     "Instance": {
       "RemovalConditions": [
         {
-          "Type": "IdleTimeout",
+          "Type": "WorldEmpty",
           "TimeoutSeconds": 300.0
         }
       ],
