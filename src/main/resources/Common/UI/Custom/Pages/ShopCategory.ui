@@ -1,0 +1,5 @@
+TabButton {
+  Icon: "../Common/RecipesIcon.png";
+  TooltipText: %server.customUI.uiGallery.navigation.tabOne;
+  Id: "Tab1";
+}

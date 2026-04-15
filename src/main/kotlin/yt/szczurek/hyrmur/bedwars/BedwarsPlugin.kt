@@ -24,10 +24,12 @@ import kotlinx.coroutines.future.future
 import yt.szczurek.hyrmur.bedwars.asset.BedwarsGameConfig
 import yt.szczurek.hyrmur.bedwars.asset.BedwarsGenerator
 import yt.szczurek.hyrmur.bedwars.asset.BedwarsMap
+import yt.szczurek.hyrmur.bedwars.asset.BedwarsShop
 import yt.szczurek.hyrmur.bedwars.asset.BedwarsTeam
 import yt.szczurek.hyrmur.bedwars.command.BedwarsCommand
 import yt.szczurek.hyrmur.bedwars.component.*
 import yt.szczurek.hyrmur.bedwars.interaction.SnapToGridInteraction
+import yt.szczurek.hyrmur.bedwars.page.BedwarsShopPageSupplier
 import yt.szczurek.hyrmur.bedwars.page.GeneratorEditorPageSupplier
 import yt.szczurek.hyrmur.bedwars.page.TeamSpawnpointEditorPageSupplier
 import yt.szczurek.hyrmur.bedwars.system.BedwarsGameStartSystem
@@ -96,6 +98,16 @@ class BedwarsPlugin(init: JavaPluginInit) : JavaPlugin(init) {
                 .build()
         )
 
+        AssetRegistry.register(
+            HytaleAssetStore.builder(
+                BedwarsShop::class.java,
+                DefaultAssetMap()
+            )
+                .setPath("Bedwars/Shops").setCodec(BedwarsShop.CODEC)
+                .setKeyFunction { shop -> shop.id }
+                .build()
+        )
+
         val entityStoreRegistry = this.entityStoreRegistry
         this.generatorComponentType =
             entityStoreRegistry.registerComponent(Generator::class.java) {
@@ -149,6 +161,8 @@ class BedwarsPlugin(init: JavaPluginInit) : JavaPlugin(init) {
             .register("GeneratorEditor", GeneratorEditorPageSupplier::class.java, GeneratorEditorPageSupplier.CODEC)
         this.getCodecRegistry(OpenCustomUIInteraction.PAGE_CODEC)
             .register("TeamSpawnpointEditor", TeamSpawnpointEditorPageSupplier::class.java, TeamSpawnpointEditorPageSupplier.CODEC)
+        this.getCodecRegistry(OpenCustomUIInteraction.PAGE_CODEC)
+            .register("BedwarsShop", BedwarsShopPageSupplier::class.java, BedwarsShopPageSupplier.CODEC)
 
         ISpawnProvider.CODEC.register("Bedwars", BedwarsGameSpawnProvider::class.java, BedwarsGameSpawnProvider.CODEC)
 
