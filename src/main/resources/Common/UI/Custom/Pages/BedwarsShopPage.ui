@@ -1,5 +1,4 @@
 $C = "../Common.ui";
-$TheTab = "ShopCategory.ui";
 
 $C.@PageOverlay {}
 
