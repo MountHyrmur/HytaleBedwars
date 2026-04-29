@@ -7,15 +7,16 @@ import com.hypixel.hytale.component.Ref
 import com.hypixel.hytale.component.Store
 import com.hypixel.hytale.protocol.packets.interface_.CustomPageLifetime
 import com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType
+import com.hypixel.hytale.server.core.entity.ItemUtils
 import com.hypixel.hytale.server.core.entity.entities.player.pages.InteractiveCustomUIPage
 import com.hypixel.hytale.server.core.inventory.InventoryComponent
 import com.hypixel.hytale.server.core.inventory.container.CombinedItemContainer
+import com.hypixel.hytale.server.core.inventory.transaction.ItemStackTransaction
 import com.hypixel.hytale.server.core.ui.builder.EventData
 import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder
 import com.hypixel.hytale.server.core.ui.builder.UIEventBuilder
 import com.hypixel.hytale.server.core.universe.PlayerRef
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore
-import yt.szczurek.hyrmur.bedwars.BedwarsPlugin
 import yt.szczurek.hyrmur.bedwars.asset.BedwarsShop
 import yt.szczurek.hyrmur.bedwars.asset.BedwarsTeam
 import yt.szczurek.hyrmur.bedwars.asset.data.ShopTrade
@@ -27,16 +28,24 @@ class BedwarsShopPage(
     private val team: BedwarsTeam,
 ) : InteractiveCustomUIPage<BedwarsShopPage.BindingData>(playerRef, CustomPageLifetime.CanDismissOrCloseThroughInteraction, BindingData.CODEC) {
 
+    var selectedPageIndex = 0
+
     class BindingData {
         var tradeIndex: Int? = null
+        var pageIndex: Int? = null
 
         companion object {
             const val TRADE_INDEX_KEY = "TradeIndex"
+            const val TAB_INDEX_KEY = "TabIndex"
             val CODEC: BuilderCodec<BindingData> =
                 BuilderCodec.builder(BindingData::class.java) { BindingData() }
                     .append(KeyedCodec(TRADE_INDEX_KEY, Codec.STRING),
                         { data, s -> data.tradeIndex = s?.toIntOrNull() },
                         { data -> data.tradeIndex.toString() }
+                    ).add()
+                    .append(KeyedCodec(TAB_INDEX_KEY, Codec.STRING),
+                        { data, s -> data.pageIndex = s?.toIntOrNull() },
+                        { data -> data.pageIndex.toString() }
                     ).add()
                     .build()
         }
@@ -50,11 +59,33 @@ class BedwarsShopPage(
         val icon = "Common/RecipesIcon.png"
         val tabs = shop.pages.withIndex().map { (i, page) -> NavigationTab("Tab$i", icon, page.title) }.toList()
         uiCommandBuilder.set("#TopTabs.Tabs", tabs)
-        uiCommandBuilder.set("#TopTabs.SelectedTab", "Tab0")
 
+        for (i in shop.pages.indices) {
+            uiEventBuilder.addEventBinding(
+                CustomUIEventBindingType.Activating,
+                "#TopTabs[$i]",
+                EventData.of(BindingData.TAB_INDEX_KEY, "$i")
+            )
+        }
+
+        updatePage(ref, store, uiCommandBuilder, uiEventBuilder)
+    }
+
+    private fun updatePage(
+        ref: Ref<EntityStore>,
+        store: Store<EntityStore>,
+        uiCommandBuilder: UICommandBuilder,
+        uiEventBuilder: UIEventBuilder
+    ) {
+        val page = shop.pages[selectedPageIndex]
         val inventory = getInventory(ref, store)
 
-        val page = shop.pages.first()
+        uiCommandBuilder.set("#TitleLabel.Text", page.title)
+
+        uiCommandBuilder.set("#TopTabs.SelectedTab", "Tab${selectedPageIndex}")
+
+        uiCommandBuilder.clear("#ItemGrid")
+
         for ((i, trade) in page.trades.withIndex()) {
             uiCommandBuilder.append("#ItemGrid", "Pages/ShopEntry.ui")
             val selector = "#ItemGrid[$i]"
@@ -75,7 +106,11 @@ class BedwarsShopPage(
                 uiCommandBuilder.set("$selector #ProductCount.Text", "$outputCount")
             }
 
-            uiEventBuilder.addEventBinding(CustomUIEventBindingType.Activating, selector, EventData.of(BindingData.TRADE_INDEX_KEY, "$i"))
+            uiEventBuilder.addEventBinding(
+                CustomUIEventBindingType.Activating,
+                selector,
+                EventData.of(BindingData.TRADE_INDEX_KEY, "$i")
+            )
         }
     }
 
@@ -111,6 +146,13 @@ class BedwarsShopPage(
         if (data.tradeIndex != null) {
             tryExecuteTrade(ref, store, data.tradeIndex!!)
             sendUpdate()
+        }
+        if (data.pageIndex != null) {
+            selectedPageIndex = data.pageIndex!!
+            val uiBuilder = UICommandBuilder()
+            val eventBuilder = UIEventBuilder()
+            updatePage(ref, store, uiBuilder, eventBuilder)
+            sendUpdate(uiBuilder, eventBuilder, false)
         }
     }
 }

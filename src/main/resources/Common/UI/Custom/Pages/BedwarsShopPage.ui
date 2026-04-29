@@ -11,28 +11,19 @@ Group {
   TabNavigation #TopTabs {
     Anchor: (Height: 66, Left: 2, Right: 0);
     Style: $C.@TopTabsStyle;
-    SelectedTab: "Tab1";
-
-    TabButton {
-      Icon: PatchStyle ( TexturePath: "Icons/ItemsGenerated/Wood_Hardwood_Planks.png" );
-      TooltipText: %server.customUI.uiGallery.navigation.tabOne;
-      Id: "Tab1";
-    }
   }
 
   $C.@Container {
     Anchor: (Width: 740, Height: 480, Left: 0);
 
     #Title {
-      $C.@Title {
-        @Text = %server.customUI.uiGallery.navigation.tabContentArea;
-      }
+      $C.@Title #TitleLabel {}
     }
 
-    Group #ItemGrid {
-      Anchor: (Top: 30);
-      Padding: (Full: 20);
-      LayoutMode: LeftCenterWrap;
+    #Content {
+      Group #ItemGrid {
+        LayoutMode: LeftCenterWrap;
+      }
     }
   }
 }
