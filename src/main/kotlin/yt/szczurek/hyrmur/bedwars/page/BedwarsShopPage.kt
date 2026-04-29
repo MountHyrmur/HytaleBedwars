@@ -122,8 +122,7 @@ class BedwarsShopPage(
         return inventory.canRemoveItemStack(trade.toPriceItemStack()) && inventory.canAddItemStack(trade.toProductItemStack())
     }
 
-    fun tryExecuteTrade(ref: Ref<EntityStore>, store: Store<EntityStore>, tradeIndex: Int) {
-        val trade = shop.pages.first().trades[tradeIndex]
+        val trade = shop.pages[selectedPageIndex].trades[tradeIndex]
 
         val inventory = getInventory(ref, store)
         val canBuy = canBuyTrade(trade, inventory)
