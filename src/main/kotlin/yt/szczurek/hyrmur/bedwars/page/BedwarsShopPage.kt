@@ -110,6 +110,7 @@ class BedwarsShopPage(
     ) {
         if (data.tradeIndex != null) {
             tryExecuteTrade(ref, store, data.tradeIndex!!)
+            sendUpdate()
         }
     }
 }
