@@ -6,12 +6,32 @@
       "Trades": [
         {
           "Output": {
-            "ItemId": "Wood_Hardwoo_Planks",
+            "ItemId": "Cloth_Block_Wool_Red",
+            "Quantity": 16
+          },
+          "Input": {
+            "ItemId": "Ingredient_Bar_Iron",
+            "Quantity": 4
+          }
+        },
+        {
+          "Output": {
+            "ItemId": "Wood_Hardwood_Planks",
             "Quantity": 16
           },
           "Input": {
             "Quantity": 4,
             "ItemId": "Ingredient_Bar_Gold"
+          }
+        },
+        {
+          "Output": {
+            "ItemId": "Rock_Lime",
+            "Quantity": 12
+          },
+          "Input": {
+            "Quantity": 24,
+            "ItemId": "Ingredient_Bar_Iron"
           }
         }
       ]
