@@ -1,0 +1,81 @@
+$C = "../Common.ui";
+
+@PriceSlotSize = 34; // 32x32 + 1 border
+@ProductSlotSize = 68; // 64x64 + 2 border
+@OuterPadding = 15;
+@InnerPadding = 2;
+
+Group {
+  Padding: (Horizontal: 4);
+
+  Group {
+    LayoutMode: Center;
+    Anchor: (Width: @PriceSlotSize + @ProductSlotSize + 2 * @OuterPadding + 4 * @InnerPadding, Height: @ProductSlotSize + 2 * @OuterPadding);
+    Background: (TexturePath: "../Common/ContainerFullPatch.png", Border: @OuterPadding);
+    Padding: (Full: @OuterPadding);
+
+    ItemSlotButton {
+      Group #PriceContainer {
+        Padding: @InnerPadding;
+
+        // Vertical group with the slot and price label
+        Group {
+          LayoutMode: Middle;
+
+          // Price slot with border
+          Group #PriceSlotBorder {
+            Anchor: (Width: @PriceSlotSize, Height: @PriceSlotSize);
+            Background: #1a2530;
+            Padding: 1;
+
+            ItemSlot #PriceSlot {
+              Anchor: (Full: 0);
+            }
+          }
+
+          Label #PriceCount {
+            Padding: (Top: 2);
+            Style: (
+              FontSize: 13,
+              TextColor: #ffffff,
+              VerticalAlignment: Center,
+              HorizontalAlignment: Center,
+              RenderBold: true,
+            );
+          }
+        }
+      }
+    }
+
+    ItemSlotButton {
+      Group #ProductContainer {
+        Anchor: (Width: @ProductSlotSize, Height: @ProductSlotSize);
+        Padding: @InnerPadding;
+
+        // Product slot with border
+        Group #ProductSlotBorder {
+          Anchor: (Full: 0);
+          Background: #1a2530;
+          Padding: 2;
+
+          ItemSlot #ProductSlot {
+            Anchor: (Full: 0);
+            ShowQualityBackground: true;
+          }
+        }
+
+        // Quantity overlay (bottom-right corner, inside border)
+        Label #ProductCount {
+          Anchor: (Right: 6, Bottom: 3);
+          Style: (
+            FontSize: 15,
+            TextColor: #ffffff,
+            HorizontalAlignment: End,
+            VerticalAlignment: End,
+            RenderBold: true,
+          );
+        }
+      }
+    }
+  }
+}

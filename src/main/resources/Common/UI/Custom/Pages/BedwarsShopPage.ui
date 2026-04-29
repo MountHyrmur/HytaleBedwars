@@ -2,6 +2,8 @@ $C = "../Common.ui";
 
 $C.@PageOverlay {}
 
+@MaterialSlotSize = 46;
+
 Group {
   Anchor: (Width: 806, Height: 480);
   LayoutMode: Top;
@@ -27,11 +29,10 @@ Group {
       }
     }
 
-    #Content {
-      Label {
-        Text: %server.customUI.uiGallery.navigation.tabContent;
-        Style: (FontSize: 13, TextColor: $C.@ColorDefaultLabel, Wrap: true);
-      }
+    Group #ItemGrid {
+      Anchor: (Top: 30);
+      Padding: (Full: 20);
+      LayoutMode: LeftCenterWrap;
     }
   }
 }

@@ -5,6 +5,8 @@ import com.hypixel.hytale.component.Ref
 import com.hypixel.hytale.component.Store
 import com.hypixel.hytale.protocol.packets.interface_.CustomPageLifetime
 import com.hypixel.hytale.server.core.entity.entities.player.pages.InteractiveCustomUIPage
+import com.hypixel.hytale.server.core.inventory.ItemStack
+import com.hypixel.hytale.server.core.ui.ItemGridSlot
 import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder
 import com.hypixel.hytale.server.core.ui.builder.UIEventBuilder
 import com.hypixel.hytale.server.core.universe.PlayerRef
@@ -35,6 +37,23 @@ class BedwarsShopPage(
         val tabs = shop.pages.withIndex().map { (i, page) -> NavigationTab("Tab$i", icon, page.title) }.toList()
         uiCommandBuilder.set("#TopTabs.Tabs", tabs)
         uiCommandBuilder.set("#TopTabs.SelectedTab", "Tab0")
+
+        val page = shop.pages.first()
+        for ((i, trade) in page.trades.withIndex()) {
+            uiCommandBuilder.append("#ItemGrid", "Pages/ShopEntry.ui")
+            val selector = "#ItemGrid[$i]"
+
+            // Price
+            uiCommandBuilder.set("$selector #PriceSlot.ItemId", trade.input!!.itemId)
+            uiCommandBuilder.set("$selector #PriceCount.Text", "${trade.input!!.quantity}")
+
+            // Product
+            uiCommandBuilder.set("$selector #ProductSlot.ItemId", trade.output!!.itemId)
+            val outputCount = trade.output!!.quantity
+            if (outputCount > 1) {
+                uiCommandBuilder.set("$selector #ProductCount.Text", "$outputCount")
+            }
+        }
     }
 
     override fun handleDataEvent(
