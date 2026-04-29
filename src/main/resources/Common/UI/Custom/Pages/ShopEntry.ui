@@ -5,7 +5,7 @@ $C = "../Common.ui";
 @OuterPadding = 15;
 @InnerPadding = 2;
 
-Group {
+ItemSlotButton {
   Padding: (Horizontal: 4);
 
   Group {
@@ -14,66 +14,62 @@ Group {
     Background: (TexturePath: "../Common/ContainerFullPatch.png", Border: @OuterPadding);
     Padding: (Full: @OuterPadding);
 
-    ItemSlotButton {
-      Group #PriceContainer {
-        Padding: @InnerPadding;
+    Group #PriceContainer {
+      Padding: @InnerPadding;
 
-        // Vertical group with the slot and price label
-        Group {
-          LayoutMode: Middle;
+      // Vertical group with the slot and price label
+      Group {
+        LayoutMode: Middle;
 
-          // Price slot with border
-          Group #PriceSlotBorder {
-            Anchor: (Width: @PriceSlotSize, Height: @PriceSlotSize);
-            Background: #1a2530;
-            Padding: 1;
+        // Price slot with border
+        Group #PriceSlotBorder {
+          Anchor: (Width: @PriceSlotSize, Height: @PriceSlotSize);
+          Background: #1a2530;
+          Padding: 1;
 
-            ItemSlot #PriceSlot {
-              Anchor: (Full: 0);
-            }
+          ItemSlot #PriceSlot {
+            Anchor: (Full: 0);
           }
+        }
 
-          Label #PriceCount {
-            Padding: (Top: 2);
-            Style: (
-              FontSize: 13,
-              TextColor: #ffffff,
-              VerticalAlignment: Center,
-              HorizontalAlignment: Center,
-              RenderBold: true,
-            );
-          }
+        Label #PriceCount {
+          Padding: (Top: 2);
+          Style: (
+            FontSize: 13,
+            TextColor: #ffffff,
+            VerticalAlignment: Center,
+            HorizontalAlignment: Center,
+            RenderBold: true,
+          );
         }
       }
     }
 
-    ItemSlotButton {
-      Group #ProductContainer {
-        Anchor: (Width: @ProductSlotSize, Height: @ProductSlotSize);
-        Padding: @InnerPadding;
+    Group #ProductContainer {
+      Anchor: (Width: @ProductSlotSize, Height: @ProductSlotSize);
+      Padding: @InnerPadding;
 
-        // Product slot with border
-        Group #ProductSlotBorder {
+      // Product slot with border
+      Group #ProductSlotBorder {
+        Anchor: (Full: 0);
+        Background: #1a2530;
+        Padding: 2;
+
+        ItemSlot #ProductSlot {
           Anchor: (Full: 0);
-          Background: #1a2530;
-          Padding: 2;
-
-          ItemSlot #ProductSlot {
-            Anchor: (Full: 0);
-            ShowQualityBackground: true;
-          }
+          ShowQualityBackground: true;
         }
+      }
 
-        Label #ProductCount {
-          Anchor: (Right: 6, Bottom: 3);
-          Style: (
-            FontSize: 15,
-            TextColor: #ffffff,
-            HorizontalAlignment: End,
-            VerticalAlignment: End,
-            RenderBold: true,
-          );
-        }
+      Label #ProductCount {
+        Anchor: (Right: 6, Bottom: 3);
+        Style: (
+          FontSize: 15,
+          TextColor: #ffffff,
+          HorizontalAlignment: End,
+          VerticalAlignment: End,
+          RenderBold: true,
+        );
       }
     }
   }
