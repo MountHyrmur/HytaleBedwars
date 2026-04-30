@@ -20,6 +20,10 @@ class BedwarsGame(val mapAsset: BedwarsMap, val config: BedwarsGameConfig, val w
 
     suspend fun init() {
 
+        BedwarsPlugin.LOGGER.atInfo().log("Loading chunks for game")
+        BedwarsMapManager.loadChunksAsync(mapAsset.chunkLoadRadius, world)
+        BedwarsPlugin.LOGGER.atInfo().log("Chunks loaded")
+
         val deferred = CompletableDeferred<Unit>()
         world.execute {
             this.worldInit()
@@ -38,7 +42,6 @@ class BedwarsGame(val mapAsset: BedwarsMap, val config: BedwarsGameConfig, val w
     }
 
     private fun worldInit() {
-        BedwarsMapManager.loadChunks(mapAsset.chunkLoadRadius, world)
         val store = world.entityStore.store
         store.getResource(BedwarsGameHolder.resourceType).game = this
 
@@ -65,7 +68,7 @@ class BedwarsGame(val mapAsset: BedwarsMap, val config: BedwarsGameConfig, val w
         worldConfig.isDeleteOnUniverseStart = true
         worldConfig.isSavingPlayers = false
         worldConfig.setCanSaveChunks(false)
-        InstanceWorldConfig.ensureAndGet(worldConfig).setRemovalConditions(WorldEmptyCondition(30.0))
+        InstanceWorldConfig.ensureAndGet(worldConfig).setRemovalConditions(WorldEmptyCondition(90.0))
         worldConfig.markChanged()
 
         val requiredPlayers = mapAsset.teamCount * config.teamSize
@@ -89,10 +92,15 @@ class BedwarsGame(val mapAsset: BedwarsMap, val config: BedwarsGameConfig, val w
                 throw IllegalArgumentException("Setup of map $mapName is not finished")
             }
 
+            BedwarsPlugin.LOGGER.atInfo().log("Loading map $mapName for playing")
             val world = BedwarsMapManager.loadForPlaying(mapAsset, returnTransform, returnWorld)
             val game = BedwarsGame(mapAsset, config, world)
 
+            BedwarsPlugin.LOGGER.atInfo().log("Initializing game on ${world.name}")
+
             game.init()
+
+            BedwarsPlugin.LOGGER.atInfo().log("Game initialized")
 
             return game
         }

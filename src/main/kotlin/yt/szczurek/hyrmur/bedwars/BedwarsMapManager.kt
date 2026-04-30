@@ -18,14 +18,14 @@ import com.hypixel.hytale.server.core.modules.entity.component.TransformComponen
 import com.hypixel.hytale.server.core.universe.Universe
 import com.hypixel.hytale.server.core.universe.world.World
 import com.hypixel.hytale.server.core.universe.world.WorldConfig
+import com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk
 import com.hypixel.hytale.server.core.universe.world.events.RemoveWorldEvent
 import com.hypixel.hytale.server.core.universe.world.spawn.GlobalSpawnProvider
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore
 import com.hypixel.hytale.server.core.universe.world.worldgen.provider.VoidWorldGenProvider
 import com.hypixel.hytale.server.core.universe.world.worldmap.provider.DisabledWorldMapProvider
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.*
 import kotlinx.coroutines.future.await
-import kotlinx.coroutines.withContext
 import org.joml.Vector3d
 import org.joml.Vector3i
 import yt.szczurek.hyrmur.bedwars.asset.BedwarsMap
@@ -183,6 +183,17 @@ object BedwarsMapManager {
                 world.getChunk(ChunkUtil.indexChunk(x, z))
             }
         }
+    }
+
+    suspend fun loadChunksAsync(radius: Int, world: World) {
+        val futures: MutableList<Deferred<WorldChunk>> = ArrayList()
+        for (x in -radius..radius) {
+            for (z in -radius..radius) {
+                futures.add( BedwarsPlugin.get().scope.async { world.getChunkAsync(ChunkUtil.indexChunk(x, z)).await() })
+            }
+        }
+
+        awaitAll(*futures.toTypedArray())
     }
 
     fun onWorldRemoveEvent(event: RemoveWorldEvent) {
