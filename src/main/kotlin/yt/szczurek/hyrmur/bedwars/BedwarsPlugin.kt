@@ -16,27 +16,21 @@ import com.hypixel.hytale.server.core.universe.world.World
 import com.hypixel.hytale.server.core.universe.world.events.RemoveWorldEvent
 import com.hypixel.hytale.server.core.universe.world.spawn.ISpawnProvider
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore
+import com.hypixel.hytale.server.npc.NPCPlugin
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.future.future
-import yt.szczurek.hyrmur.bedwars.asset.BedwarsGameConfig
-import yt.szczurek.hyrmur.bedwars.asset.BedwarsGenerator
-import yt.szczurek.hyrmur.bedwars.asset.BedwarsMap
-import yt.szczurek.hyrmur.bedwars.asset.BedwarsShop
-import yt.szczurek.hyrmur.bedwars.asset.BedwarsTeam
+import yt.szczurek.hyrmur.bedwars.asset.*
 import yt.szczurek.hyrmur.bedwars.command.BedwarsCommand
 import yt.szczurek.hyrmur.bedwars.component.*
+import yt.szczurek.hyrmur.bedwars.interaction.BuilderActionOpenBedwarsShop
 import yt.szczurek.hyrmur.bedwars.interaction.SnapToGridInteraction
 import yt.szczurek.hyrmur.bedwars.page.BedwarsShopPageSupplier
 import yt.szczurek.hyrmur.bedwars.page.GeneratorEditorPageSupplier
 import yt.szczurek.hyrmur.bedwars.page.TeamSpawnpointEditorPageSupplier
-import yt.szczurek.hyrmur.bedwars.system.BedwarsGameStartSystem
-import yt.szczurek.hyrmur.bedwars.system.BlockProtectionSystems
-import yt.szczurek.hyrmur.bedwars.system.GeneratorNameplateSystem
-import yt.szczurek.hyrmur.bedwars.system.GeneratorSystem
-import yt.szczurek.hyrmur.bedwars.system.UpdateGeneratorFromBuilderSystem
+import yt.szczurek.hyrmur.bedwars.system.*
 import java.awt.Color
 import java.util.concurrent.CompletableFuture
 
@@ -163,6 +157,7 @@ class BedwarsPlugin(init: JavaPluginInit) : JavaPlugin(init) {
             .register("TeamSpawnpointEditor", TeamSpawnpointEditorPageSupplier::class.java, TeamSpawnpointEditorPageSupplier.CODEC)
         this.getCodecRegistry(OpenCustomUIInteraction.PAGE_CODEC)
             .register("BedwarsShop", BedwarsShopPageSupplier::class.java, BedwarsShopPageSupplier.CODEC)
+        NPCPlugin.get().registerCoreComponentType("OpenBedwarsShop") { BuilderActionOpenBedwarsShop() }
 
         ISpawnProvider.CODEC.register("Bedwars", BedwarsGameSpawnProvider::class.java, BedwarsGameSpawnProvider.CODEC)
 
