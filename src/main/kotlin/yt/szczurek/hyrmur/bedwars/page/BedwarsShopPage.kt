@@ -137,8 +137,6 @@ class BedwarsShopPage(
     fun tryExecuteTrade(ref: Ref<EntityStore>, store: Store<EntityStore>, tradeIndex: Int): Boolean {
         val trade = shop.pages[selectedPageIndex].trades[tradeIndex]
 
-        val player = store.getComponent(ref, Player.getComponentType())!!
-
         val inventory = getInventory(ref, store)
         val canBuy = canBuyTrade(trade, inventory)
 
@@ -166,11 +164,11 @@ class BedwarsShopPage(
         // Things that didn't fit
         val remaining = addTransaction.remainder?.takeUnless { rem -> rem.isEmpty }?.quantity ?: 0
         if (remaining == 0) {
-            player.notifyPickupItem(ref, productItemStack, null, store)
+            Player.notifyPickupItem(ref, productItemStack, null, store)
         } else {
             val added = productItemStack.getQuantity() - remaining
             if (added > 0) {
-                player.notifyPickupItem(ref, productItemStack.withQuantity(added)!!, null, store)
+                Player.notifyPickupItem(ref, productItemStack.withQuantity(added)!!, null, store)
             }
             ItemUtils.dropItem(ref, addTransaction.remainder!!, store)
         }

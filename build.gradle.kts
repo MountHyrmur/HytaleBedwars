@@ -17,11 +17,13 @@ dependencies {
 hytale {
     allowOp.set(true)
     patchline.set(project.property("patchline") as String)
+    version.set(project.property("pre_release_version") as String)
     includeLocalMods.set(true)
 
     manifest {
         version.set(project.version.toString())
         author("SzczurekYT", url = "https://github.com/SzczurekYT/")
         dependencies = mapOf("Kotale:Kotlin" to "*")
+        serverVersion = project.property("pre_release_version") as String
     }
 }
