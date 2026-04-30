@@ -11,7 +11,7 @@
     ],
     "Website": "https://github.com/MountHyrmur/HytaleBedwars",
     "Main": "yt.szczurek.hyrmur.bedwars.BedwarsPlugin",
-    "ServerVersion": "",
+    "ServerVersion": "2026.04.30-b4f6a911e",
     "Dependencies": {
         "Kotale:Kotlin": "*"
     },
